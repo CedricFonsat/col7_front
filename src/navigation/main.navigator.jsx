@@ -74,9 +74,9 @@ const MainNaviagtor = () => {
           name="Profile"
           component={ProfileScreen}
           options={{
-            tabBarLabel: "Home",
+            tabBarLabel: "User",
             tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="home" color={color} size={26} />
+              <MaterialCommunityIcons name="face-man-profile" color={color} size={26} />
             ),
             title: '',
             headerStyle: {
