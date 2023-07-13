@@ -10,6 +10,7 @@ import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import CategoryDetail from "../screens/home/Detail/CategoryDetail";
 import Modal from '../screens/home/components/Modal'
+import CollectionDetail from "../screens/home/Detail/CollectionDetail";
 // style
 import logo from '../../assets/logo.png'
 
@@ -51,11 +52,18 @@ const AppNaviagtor = () => {
             ),
           }}
         />
+                 <Stack.Screen
+          name="CollectionDetail"
+          component={CollectionDetail}
+        />
+
           <Stack.Screen
           name="Modal"
           component={Modal}
           options={{ presentation: 'modal' }}
         />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

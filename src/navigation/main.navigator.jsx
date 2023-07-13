@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import SearchScreen from "../screens/search/SearchScreen";
+import MarketScreen from "../screens/Market/MarketScreen"
 // style
 import logo from '../../assets/logo.png'
 
@@ -21,7 +22,7 @@ const tabBarOptions = {
   "tabBarStyle": [
     {
       "display": "flex",
-      "backgroundColor": "#191923",
+      "backgroundColor": '#1A1A24',
     //  "backgroundColor": "transparent",
       "borderTopWidth": 1,
       "borderTopColor": 'rgba(0, 0, 0, 0)',
@@ -40,7 +41,7 @@ const MainNaviagtor = () => {
         // tabBar={(props) => <TabBar {...props} />}
       >
         {/* screenOptions={{ presentation: 'modal' }} */}
-        
+
         <Tab.Screen
           name="Home"
           component={HomeScreen}
@@ -66,7 +67,7 @@ const MainNaviagtor = () => {
           ),
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons name="home-outline" color={color} size={26} />
           )
          }}
         />
@@ -91,6 +92,20 @@ const MainNaviagtor = () => {
             tabBarLabel: "Search",
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="magnify" color={color} size={26} />
+            ),
+            title: '',
+            headerStyle: {
+          backgroundColor: '#1A1A24',
+          borderBottomColor: 'rgba(0, 0, 0, 0)'}
+          }}
+        />
+                 <Tab.Screen
+          name="Market"
+          component={MarketScreen}
+          options={{
+            tabBarLabel: "Search",
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="shopping-outline" color={color} size={26} />
             ),
             title: '',
             headerStyle: {

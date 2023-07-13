@@ -1,36 +1,39 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import Size from '../../constants/Size'
+import Colors from '../../constants/Colors'
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const SearchScreen = () => {
 
  const headerShow = () => {
    return (
      <View style={{
-       backgroundColor: 'red',
+       backgroundColor: Colors.tertiary,
        width: width,
-       height: height / 4.5,
+       height: height / 5.5,
        position: 'relative',
        alignItems: 'center'
      }}>
-       <View style={{
-         backgroundColor: 'green',
-         width: "85%",
-         height: 100,
-         position: 'absolute',
-         bottom: -50,
-         alignItems: 'center',
-         justifyContent: 'center',
-         borderRadius: 20,
-       }}>
-       </View>
      </View>
    )
  }
 
+ const SearchBar = () => {
+  return (
+      <View style={styles.searchBar}>
+          <View style={styles.logoSearchBar}>
+            <MaterialCommunityIcons name="magnify" color={Colors.white} size={26} />
+          </View>
+          <Text style={styles.textSearchBar}>Find Your Product</Text>
+      </View>
+    )
+}
+
   return (
     <View style={styles.container}>
       {headerShow()}
-        <Text>ggggggg</Text>
+      {SearchBar()}
     </View>
   )
 }
@@ -42,8 +45,26 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.primary,
     alignItems: "center",
-   // justifyContent: 'center'
   },
+  searchBar: {
+    backgroundColor: Colors.tertiary,
+    height: 60,
+    width: width * 0.90,
+    marginTop: Size.default,
+    borderRadius: Size.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Size.default
+},
+textSearchBar: {
+    color: Colors.white,
+    marginLeft: Size.small
+},
+logoSearchBar: {
+  width: 20,
+  height: 20,
+ // backgroundColor: Colors.white
+},
 });

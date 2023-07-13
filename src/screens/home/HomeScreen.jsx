@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, FlatList, Image, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, FlatList, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
 import Size from '../../constants/Size'
 import Colors from '../../constants/Colors'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -55,7 +55,7 @@ const DATA = [
     },
   ];
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
 
  const headerShow = () => {
    return (
@@ -69,18 +69,37 @@ const HomeScreen = () => {
 
  const SearchBar = () => {
     return (
-        <View style={styles.searchBar}>
+        <TouchableOpacity style={styles.searchBar} onPress={() => {
+          /* 1. Navigate to the Details route with params */
+          navigation.navigate('Search');
+          // navigation.navigate('Details', {
+          //   itemId: 86,
+          //   otherParam: 'anything you want here',
+          // });
+        }}>
             <View style={styles.logoSearchBar}>
               <MaterialCommunityIcons name="magnify" color={Colors.white} size={26} />
             </View>
             <Text style={styles.textSearchBar}>Find Your Product</Text>
-        </View>
+        </TouchableOpacity>
       )
  }
 
- const CollectionItem = ({title, image, logo}) => {
+ const CollectionItem = ({title, image, logo, onPress}) => {
       return (
-        <View style={styles.collectionItem}>
+        <TouchableOpacity onPress={onPress} activeOpacity={1}>
+        <View style={styles.collectionItem}
+        onPress={onPress}
+       
+        //  onPress={() => {
+        //    navigation.navigate('Search');
+        // }}
+        // , {
+        //   itemId: 86,
+        //   otherParam: 'anything you want here',
+        // }
+        
+          >
             <View style={styles.cover}>
             <Image
         style={styles.avatar}
@@ -94,6 +113,8 @@ const HomeScreen = () => {
         // Background Linear Gradient
         colors={['transparent', 'rgba(0,0,0,0.6)']}
         style={styles.background}
+
+        
       />
            <View style={styles.collectionItemFloat}>
            <Image
@@ -104,17 +125,29 @@ const HomeScreen = () => {
       />
            </View>
       </View>
+      </TouchableOpacity>
       )
  }
 
  const CollectionList = () => {
+
+  const handleItemPress = (itemId) => {
+    // Naviguez vers la page de détails en utilisant l'ID en paramètre
+    navigation.navigate('CollectionDetail', { itemId: itemId });
+  };
+
     return (
     <View style={styles.collectionList}>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
         data={DATA}
-        renderItem={({item}) => <CollectionItem title={item.title} image={item.image} logo={item.otherImage} />}
+        renderItem={({item}) => <CollectionItem
+         title={item.title}
+         image={item.image} 
+         logo={item.otherImage} 
+         onPress={() => handleItemPress(item.title)}
+          />}
         keyExtractor={item => item.id}
       />
     </View>

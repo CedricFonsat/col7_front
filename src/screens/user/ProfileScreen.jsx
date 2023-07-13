@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, Dimensions, FlatList, Image, ScrollView } from "react-native";
 import Size from "../../constants/Size";
 import Colors from "../../constants/Colors";
 import { LinearGradient } from 'expo-linear-gradient'
@@ -150,10 +150,14 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* <ScrollView 
+      contentContainerStyle={{flexGrow : 1, alignItems : 'center'}}
+      > */}
       {headerShow()}
       {midInfos()}
       {tabBar()}
       {CardList()}
+      {/* </ScrollView> */}
     </View>
   );
 };
