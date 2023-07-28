@@ -1,9 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, FlatList, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, FlatList, Image, TouchableOpacity, Button, SafeAreaView, ScrollView, StatusBar } from 'react-native'
 import Size from '../../constants/Size'
 import Colors from '../../constants/Colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+
 
 const DATA = [
     {
@@ -187,7 +189,20 @@ const HomeScreen = ({navigation}) => {
  }
 
   return (
-    <View style={styles.container}>
+
+    <SafeAreaView 
+    // style={backgroundStyle}
+    style={styles.backgroundStyle}
+    >
+      <StatusBar
+      //  barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+       // backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+       >
+        {/* <Header /> */}
+        <View style={styles.container}>
         {headerShow()}
       {SearchBar()}
       {CollectionList()}
@@ -196,6 +211,8 @@ const HomeScreen = ({navigation}) => {
         </View>
         {BestCollectorList()}
     </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -208,6 +225,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.primary,
     alignItems: "center",
+  },
+  backgroundStyle: {
+    backgroundColor: Colors.primary,
   },
   headerShow: {
     width: width,

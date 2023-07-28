@@ -14,18 +14,19 @@ import CollectionDetail from "../screens/home/Detail/CollectionDetail";
 // style
 import logo from '../../assets/logo.png'
 
-import MainNaviagtor from "./main.navigator";
+import MainNavigator from "./main.navigator";
+import DrawerNavigator from "./main.navigator";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 
 
-const AppNaviagtor = () => {
+const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Main"
+        initialRouteName="DrawerNaviagtor"
         screenOptions={{
           headerShown:false
         }}
@@ -33,15 +34,11 @@ const AppNaviagtor = () => {
         {/* screenOptions={{ presentation: 'modal' }} */}
 
         <Stack.Screen
-          name="Main"
-          component={MainNaviagtor}
-          options={{
-            tabBarLabel: "Home",
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="home" color={color} size={26} />
-            ),
-          }}
+          name="DrawerNavigator"
+          component={DrawerNavigator}
         />
+
+
          <Stack.Screen
           name="Detail"
           component={CategoryDetail}
@@ -69,4 +66,4 @@ const AppNaviagtor = () => {
   );
 };
 
-export default AppNaviagtor;
+export default AppNavigator;

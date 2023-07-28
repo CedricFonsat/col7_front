@@ -4,15 +4,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // init route
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from "@react-navigation/drawer";
 // route
 import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import SearchScreen from "../screens/search/SearchScreen";
-import MarketScreen from "../screens/Market/MarketScreen"
+import MarketScreen from "../screens/Market/MarketScreen";
 // style
 import logo from '../../assets/logo.png'
+import CustomDrawer from "../components/CustomDrawer";
 
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const tabBarOptions = {
   "tabBarActiveTintColor": "#00A3FF",
@@ -31,7 +34,7 @@ const tabBarOptions = {
   ]
 };
 
-const MainNaviagtor = () => {
+const MainNavigator = ({navigation}) => {
   return (
       <Tab.Navigator
         initialRouteName="Home"
@@ -61,7 +64,7 @@ const MainNaviagtor = () => {
           ),
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => alert('This is a button!')}>
+            onPress={navigation.openDrawer}>
             <MaterialCommunityIcons name="menu" color="white" size={26} style={{marginLeft: 20}} />
             </TouchableOpacity>
           ),
@@ -118,4 +121,29 @@ const MainNaviagtor = () => {
   );
 };
 
-export default MainNaviagtor;
+const DrawerNavigator = () => {
+  return (
+<Drawer.Navigator screenOptions={{
+          headerShown:false, 
+          drawerActiveTintColor: 'white',
+          drawerActiveBackgroundColor: '#242435',
+          drawerInactiveTintColor: 'white',
+          drawerLabelStyle: {
+            marginLeft: -25,
+          }
+        }}
+        drawerContent={props => <CustomDrawer {...props} />}
+        >
+<Drawer.Screen name="MainNavigator" component={MainNavigator} options={{
+  drawerIcon: ({color}) => (
+    <MaterialCommunityIcons name="home-outline" color={color} size={26} />
+  ),
+  drawerLabel: 'Home'
+}} />
+</Drawer.Navigator>
+  )
+}
+
+
+
+export default DrawerNavigator;
