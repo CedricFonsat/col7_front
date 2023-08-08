@@ -1,40 +1,90 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Dimensions, Animated, Image, ImageBackground, TouchableOpacity } from "react-native";
-import { BlurView } from 'expo-blur';
+import React, { useRef, useCallback, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Animated,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
+import { BlurView } from "expo-blur";
 import Colors from "../constants/Colors";
 import Size from "../constants/Size";
 import { LinearGradient } from "expo-linear-gradient";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useBuyCardByIdMutation, useGetCardsQuery } from "../store/slices/cardSlice";
+import { useMeQuery } from "../store/slices/authSlice";
 
-export default function Card({name,price,bid,onPress,image}) {
+export default function Card({ name, price, bid, onPress, image, id }) {
+
+  const { data } = useMeQuery();
+  const [buyCardById] = useBuyCardByIdMutation();
+  const { refetch } = useGetCardsQuery();
+
+  const rest = {
+    'id': id,
+    'userId': data.id,
+  };
+
+  const buyItem = async() => {
+
+    await buyCardById(rest).then((res) => {
+     
+        console.log(res);
+    
+      })
+      .catch(() => console.log("pas bon"));
+    console.log(rest);
+    refetch();
+  };
+
+  const sellItem = (id) => {
+    console.log(id,'vendre cette NFT');
+  }
+
+  
+
+
 
   return (
-   <>
-    <View style={styles.container}>
-      <Image
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-      }}
-       source={image}/>
-  <View style={{zIndex: 4}}>
-  <Text style={styles.cardName}>{name}</Text>
-    <View style={styles.cardInfos}>
-    <BlurView intensity={40} tint="white" style={styles.cardBlur}>
-        <Text style={styles.cardPrice}>Price {price}C7</Text>
-      </BlurView>
-      <TouchableOpacity onPress={onPress} style={[styles.bidButton,{display: {bid}}]}>
-        {/* <Image source={bidButton} /> */}
+    <>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.container}
+        onPress={onPress}
+      >
+        <Image
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+          }}
+          source={image}
+        />
+        <View style={{ zIndex: 4 }}>
+          <Text style={styles.cardName}>{name}</Text>
+          <View style={styles.cardInfos}>
+            <BlurView intensity={40} tint="white" style={styles.cardBlur}>
+              <Text style={styles.cardPrice}>Price : {price} C7</Text>
+            </BlurView>
+            <TouchableOpacity
+             // onPress={onPress}
+              style={[styles.bidButton, { display: { bid } }]}
+            >
+              {/* <Image source={bidButton} /> */}
+            </TouchableOpacity>
+          </View>
+        </View>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["transparent", Colors.primary]}
+          style={styles.background}
+        />
       </TouchableOpacity>
-    </View>
-  </View>
-    <LinearGradient
-        // Background Linear Gradient
-        colors={['transparent', Colors.primary]}
-        style={styles.background}
-      />
- </View>
- </>
+    </>
   );
 }
 
@@ -45,60 +95,75 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     width: width / 2.2,
     height: height * 0.3,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderRadius: Size.default,
-    justifyContent: 'flex-end',
-    margin: 9
+    justifyContent: "flex-end",
+    margin: 9,
+    opacity: 1,
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  buttonBottomSheet: {
+    width: 100,
+    height: 40,
+    backgroundColor: "pink",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textBottomSheet: {
+    fontSize: 40,
+    fontWeight: "bold",
   },
   background: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 1,
     left: 0,
     right: 0,
     top: 0,
-    height: '100%',
+    height: "100%",
   },
   blurImageStyle: {
     width: width / 2.2,
     height: 60,
-    position: 'absolute',
+    position: "absolute",
     zIndex: 9,
     bottom: 0,
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
-  cardInfos:{
-   // backgroundColor: 'blue',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-   // paddingHorizontal: Size.default,
-   // paddingBottom: Size.default,
-    paddingTop: Size.small
+  cardInfos: {
+    // backgroundColor: 'blue',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // paddingHorizontal: Size.default,
+    // paddingBottom: Size.default,
+    paddingTop: Size.small,
   },
-  cardBlur:{
+  cardBlur: {
     borderRadius: 50,
     height: 40,
-    width: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 130,
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: Size.default,
     paddingBottom: Size.default,
-      
   },
-  cardName:{
+  cardName: {
     paddingHorizontal: Size.default,
     color: Colors.white,
     fontWeight: Size.bold,
-    fontSize: Size.fs20
+    fontSize: Size.fs20,
   },
-  cardPrice:{
-    color: Colors.white
+  cardPrice: {
+    color: Colors.white,
   },
-  bidButton:{
+  bidButton: {
     width: 40,
     height: 40,
     backgroundColor: Colors.white,
     borderTopLeftRadius: Size.default,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

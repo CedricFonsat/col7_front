@@ -1,14 +1,28 @@
 import React from "react";
-import { View, StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, Dimensions, TouchableOpacity, Image } from "react-native";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import Colors from "../constants/Colors";
 import Size from "../constants/Size";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useMeQuery } from "../store/slices/authSlice";
 
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
+const handleLogout = async () => {
+  try {
+    console.log('boss twap');
+    await AsyncStorage.removeItem("@token");
+    navigation.replace("SplashScreen");
+  } catch (error) {
+    // Handle error if needed
+  }
+};
+
 const CustomDrawer = (props) => {
+
+  const {data: meData, error: meError, isLoading: meIsLoading } = useMeQuery();
+
 
   return (
   <View style={{flex:1, backgroundColor: '#1A1A24'}}>
@@ -42,6 +56,27 @@ const CustomDrawer = (props) => {
            borderRadius: Size.xs
          }}>
 
+{
+              meError ? 
+       (
+         <Text>Oh no, there was an error</Text>
+       )
+       : meIsLoading ? 
+       ( 
+         <Text>Loading...</Text>
+       )
+        : meData ? (
+         <Image
+           source={{
+            uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/users/${meData.imageName}`
+          }}
+          style={{
+            width: "100%",
+            height: "100%"
+          }}
+           /> 
+           ) : null
+      }
          </View>
          <View style={{
            marginLeft: 20
@@ -50,10 +85,25 @@ const CustomDrawer = (props) => {
              fontSize: Size.fs20,
              fontWeight: Size.w600,
              color: Colors.white
-           }}>JhonDoe</Text>
+           }}>
+             {
+              meError ? 
+       ( "Oh no, there was an error")
+       : meIsLoading ? 
+       ( "Loading...")
+        : meData ? (
+          meData.nickname ) : null
+      }
+           </Text>
            <Text style={{
              color: Colors.white
-           }}>3000 C7</Text>
+           }}> {meError ? 
+           ( "Oh no, there was an error")
+           : meIsLoading ? 
+           ( "Loading...")
+            : meData ? (
+              meData.wallet ) : null
+          } C7</Text>
          </View>
 
 
@@ -70,7 +120,7 @@ const CustomDrawer = (props) => {
    }}>
      <TouchableOpacity 
      style={{ paddingVertical: 15 }}
-     onPress={() => {}}
+     onPress={handleLogout}
      >
     <View style={{
       flexDirection: 'row',
