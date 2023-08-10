@@ -18,7 +18,7 @@ import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useBuyCardByIdMutation, useGetCardsQuery } from "../store/slices/cardSlice";
 import { useMeQuery } from "../store/slices/authSlice";
 
-export default function Card({ name, price, bid, onPress, image, id }) {
+export default function Card({ name, price, bid, onPress, image, id, favorite }) {
 
   const { data } = useMeQuery();
   const [buyCardById] = useBuyCardByIdMutation();
@@ -56,6 +56,23 @@ export default function Card({ name, price, bid, onPress, image, id }) {
         style={styles.container}
         onPress={onPress}
       >
+        <View style={styles.favorite}>
+          {favorite ? (
+          <View style={{
+            backgroundColor: 'purple',
+            width: '100%',
+            height: '100%'
+          }}></View>
+          ) : (
+            <View style={{
+              backgroundColor: 'pink',
+              width: '100%',
+              height: '100%'
+            }}></View>
+          )
+        }
+
+        </View>
         <Image
           style={{
             width: "100%",
@@ -100,6 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     margin: 9,
     opacity: 1,
+    position: 'relative'
   },
   contentContainer: {
     flex: 1,
@@ -166,4 +184,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  favorite:{
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    backgroundColor: 'blue',
+    zIndex: 999
+  }
 });

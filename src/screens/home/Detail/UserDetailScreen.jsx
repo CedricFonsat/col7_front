@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -9,53 +9,26 @@ import {
 } from "react-native";
 import Size from "../../../constants/Size";
 import Colors from "../../../constants/Colors";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Card from "../../../components/Card";
 import { BlurView } from "expo-blur";
 import Animated from "react-native-reanimated";
-import { useGetCollectionCardsByIdQuery } from "../../../store/slices/collectionCardSlice";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useBuyCardByIdMutation, useGetCardsQuery } from "../../../store/slices/cardSlice";
 import { useMeQuery } from "../../../store/slices/authSlice";
 import arrow from '../../../../assets/icon/left.png';
 import env from "../../../data/env";
 
 const HEADER_HEIGHT = 300;
 
-const CollectionDetail = ({ navigation, route }) => {
-  const { itemId } = route.params;
-  const { data, refetch: meRefetch } = useMeQuery();
-  const [buyCardById] = useBuyCardByIdMutation();
+const UserDetailScreen = ({ navigation, route }) => {
 
+    const { itemId } = route.params;
+    const user = itemId[0];
 
+  //const { data: meData, error: meError, isLoading: meIsLoading, refetch: meRefetch } = useMeQuery();
 
-  const buyItem = async(id) => {
-
-    const rest = {
-      'id': id,
-      'userId': data.id,
-    };
-
-    console.log(rest);
-
-    await buyCardById(rest).then((res) => {
-     
-        console.log(res);
-    
-      })
-      .catch(() => console.log("pas bon"));
-    console.log(rest);
-    collectionRefetch();
-    meRefetch();
-  };
-
-  const {
-    data: collectionData,
-    error: collectionError,
-    isLoading: collectionIsLoading,
-    refetch: collectionRefetch
-  } = useGetCollectionCardsByIdQuery(itemId);
+  const floorPrice = user.cards.reduce((total, item) => total + item.price, 0);
 
   const leftButton = ({ navigation }) => {
     return (
@@ -77,8 +50,8 @@ const CollectionDetail = ({ navigation, route }) => {
         //onPress pour faire un goBack avec navigation
       >
          <Image style={{
-          width: 20,
-          height: 20,
+          width: 30,
+          height: 30,
           tintColor: Colors.white,
         }} source={arrow} /> 
       </TouchableOpacity>
@@ -144,18 +117,10 @@ const CollectionDetail = ({ navigation, route }) => {
           }}
         >
           <Text style={{ color: "gray" }}>
-            {collectionError ? (
-              <Text>Oh no, there was an error</Text>
-            ) : collectionIsLoading ? (
-              <Text>Loading...</Text>
-            ) : collectionData ? (
-              collectionData.name
-            ) : (
-              <Text>Null</Text>
-            )}
+          {user.nickname}
           </Text>
           <Text style={{ color: "white", fontWeight: "bold" }}>
-            new collection
+              @${user.nickname}
           </Text>
         </Animated.View>
       </View>
@@ -180,69 +145,83 @@ const CollectionDetail = ({ navigation, route }) => {
     );
   };
 
-
   const renderItems = ({ item, index }) => {
-   if (item.ifAvailable == true) {
-
+ if (item.ifAvailable == false) {
     return (
-      <>
       <Card
         key={item.id}
         name={item.name}
         price={item.price}
         id={item.id}
-        onPress={() => {
-          handlePresentModalPress(item)}}
         bid="flex"
-        favorite={true}
         image={{
           uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
         }}
       />
-    <BottomSheetModal
-      ref={bottomSheetRef}
-      index={0}
-      snapPoints={["40%"]}
-      backdropComponent={renderBackdrop}
-      // onChange={handleSheetChanges}
-    >
-      <View style={styles.contentContainer}>
-        {/* IMPORTANT trouver une solution pour changer l'affichage du bottom si deja acheter IMPORTANT */}
-          <View>
-            <TouchableOpacity
-              style={styles.buttonBottomSheet}
-              onPress={() => {
-                buyItem(item.id);
-              }}
-            >
-              <Text>Buy</Text>
-            </TouchableOpacity>
-            <Text style={styles.textBottomSheet}>IdNumber: {item.id} 🎉</Text>
-          </View>
-      </View>
-    </BottomSheetModal>
-    </>
     );
-   }
+     }
   };
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  const bottomSheetRef = useRef(null);
-  const handlePresentModalPress = useCallback((item) => {
-    console.log(item.id);
-    bottomSheetRef.current?.present();
-  }, []);
-
-  const renderBackdrop = useCallback((props) => {
+  const midInfos = () => {
     return (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-      />
+      <View style={styles.midInfos}>
+        <View>
+          <Text style={styles.midInfosText}>Net Worth NFT</Text>
+          <Text style={styles.midInfosTextSecond}>
+            Floor price: {floorPrice}
+          </Text>
+        </View>
+        <View style={styles.midInfosBlock}>
+          <View>
+            <MaterialCommunityIcons
+              name="cards-outline"
+              color={Colors.white}
+              size={26}
+            />
+          </View>
+          <Text style={styles.midInfosBlockText}>{user.cards.length}</Text>
+        </View>
+      </View>
     );
-  }, []);
+  };
+
+  const tabBar = () => {
+    return (
+      <View style={styles.tabBar}>
+        <View style={[styles.tabBarPanel, styles.tabBarPanelActive]}>
+          <Text style={styles.tabBarText}>Cards</Text>
+        </View>
+        <View style={styles.tabBarPanel}>
+          <Text style={styles.tabBarText}>Sell</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const headerShowInfos = () => {
+    return (
+      <View style={styles.headerShow}>
+        <BlurView intensity={70} tint="white" style={styles.headerShowInfos}>
+          <View style={styles.headerShowInfosAvatar}>
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: `${env.IMAGE_URL_USER}/${user.imageName}`,
+              }}
+            />
+          </View>
+          <View style={styles.headerShowInfosBlockTitle}>
+            <Text style={styles.headerShowInfosTitle}>{user.nickname}</Text>
+            <Text style={styles.headerShowInfosTitleSecond}>
+              @{user.nickname}
+            </Text>
+          </View>
+        </BlurView>
+      </View>
+    );
+  };
 
   const renderCollectionHeader = () => {
     return (
@@ -257,12 +236,14 @@ const CollectionDetail = ({ navigation, route }) => {
         {/* Background Image */}
         <Animated.Image
           source={{
-            uri: `${env.IMAGE_URL_COLLECTION}/${collectionData.imageName}`,
+            uri: `${env.IMAGE_URL_USER}/${user.imageName}`,
           }}
           sharedTransitionTag="sharedTag"
-          resizeMode="contain"
+          // resizeMode="contain"
           style={{
             height: HEADER_HEIGHT,
+            backgroundColor: Colors.secondary,
+            position: "relative",
             width: "200%",
             transform: [
               {
@@ -281,57 +262,17 @@ const CollectionDetail = ({ navigation, route }) => {
           }}
         ></Animated.Image>
 
-        <BlurView
-          intensity={70}
-          tint="white"
-          style={{
-            position: "absolute",
-            width: width * 0.9,
-            height: 60,
-            borderRadius: Size.xs,
-            overflow: "hidden",
-            //  backgroundColor: Colors.white,
-            justifyContent: "center",
-            alignItems: "center",
-            bottom: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: Size.fs24,
-              fontWeight: Size.w600,
-              color: Colors.white,
-            }}
-          >
-            {collectionError ? (
-              <Text>Oh no, there was an error</Text>
-            ) : collectionIsLoading ? (
-              <Text>Loading...</Text>
-            ) : collectionData ? (
-              collectionData.name
-            ) : (
-              <Text>Null</Text>
-            )}
-          </Text>
-        </BlurView>
+        {headerShowInfos()}
       </View>
     );
   };
-
-
- 
 
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
         <View style={styles.container}>
-          {collectionError ? (
-            <Text>Oh no, there was an error</Text>
-          ) : collectionIsLoading ? (
-            <Text>Loading...</Text>
-          ) : collectionData ? (
             <Animated.FlatList
-              data={collectionData.cards}
+              data={user.cards}
               renderItem={renderItems}
               numColumns={2}
               keyExtractor={(item) => `${item.id}`}
@@ -341,15 +282,19 @@ const CollectionDetail = ({ navigation, route }) => {
                   {/* Header */}
                   {/* Probable emplacement de SharedElement */}
                   {renderCollectionHeader()}
+                
 
                   {/* Title */}
                   <View
                     style={{
-                      height: 100,
+                      height: 150,
                       width: width,
                       alignItems: "center",
                     }}
-                  ></View>
+                  >
+                    {midInfos()}
+                  {tabBar()}
+                  </View>
                 </View>
               }
               scrollEventThrottle={16}
@@ -358,20 +303,18 @@ const CollectionDetail = ({ navigation, route }) => {
                 { useNativeDriver: true }
               )}
             />
-          ) : null}
 
           {renderHeader()}
 
           {/* Header Bar */}
           {renderHeaderBar()}
-          
         </View>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 };
 
-export default CollectionDetail;
+export default UserDetailScreen;
 
 const { width, height } = Dimensions.get("window");
 
@@ -402,19 +345,136 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
-  contentContainer: {
-    flex: 1,
+  headerShow: {
+    width: width * 0.9,
+    height: 100,
+    borderRadius: Size.small,
+    overflow: "hidden",
+    position: "absolute",
+    zIndex: 999,
+    bottom: 10,
+  },
+  headerShowInfos: {
+    width: width * 0.9,
+    height: 100,
+    // backgroundColor: Colors.tertiary,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: Size.small,
+  },
+  headerShowInfosAvatar: {
+    width: 80,
+    height: 80,
+    //  backgroundColor: "blue",
+    borderRadius: Size.small,
+    overflow: "hidden",
+  },
+  headerShowInfosBlockTitle: {
+    marginLeft: Size.default,
+  },
+  headerShowInfosTitle: {
+    marginBottom: Size.xs,
+    fontSize: Size.fs20,
+    fontWeight: Size.w600,
+    color: Colors.white,
+  },
+  headerShowInfosTitleSecond: {
+    color: Colors.gray,
+  },
+  midInfos: {
+    width: width * 0.9,
+    height: 60,
+    backgroundColor: Colors.tertiary,
+    marginTop: 20,
+    borderRadius: Size.xs,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: Size.default,
     alignItems: "center",
   },
-  buttonBottomSheet: {
-    width: 100,
-    height: 40,
-    backgroundColor: "pink",
-    alignItems: "center",
+  midInfosText: {
+    fontSize: Size.fs16,
+    fontWeight: Size.bold,
+    color: Colors.white,
+  },
+  midInfosTextSecond: {
+    color: Colors.gray,
+  },
+  midInfosBlock: {
+    flexDirection: "row",
+  },
+  midInfosBlockText: {
+    fontSize: Size.fs24,
+    fontWeight: Size.bold,
+    color: Colors.white,
+    marginLeft: Size.xs,
+  },
+  cardList: {
+    width: width * 0.9,
+    marginTop: Size.large,
+  },
+  cardItem: {
+    width: width * 0.42,
+    height: height * 0.28,
+    //  backgroundColor: "red",
     justifyContent: "center",
+    alignItems: "center",
+    marginBottom: Size.small,
+    borderRadius: Size.small,
+    position: "relative",
+    overflow: "hidden",
   },
-  textBottomSheet: {
-    fontSize: 40,
-    fontWeight: "bold",
-  }
+  cardItemTitle: {
+    color: Colors.white,
+    fontSize: Size.fs20,
+    zIndex: 2,
+  },
+  row: {
+    flex: 1,
+    justifyContent: "space-around",
+  },
+  cardItemImage: {
+    position: "absolute",
+    width: width * 0.42,
+    height: height * 0.28,
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+  },
+  background: {
+    position: "absolute",
+    width: width * 0.42,
+    height: height * 0.28,
+    borderRadius: Size.small,
+    zIndex: 1,
+  },
+  cover: {
+    position: "absolute",
+    width: width,
+    height: height / 3.5,
+  },
+  tabBar: {
+    width: width * 0.9,
+    height: 50,
+    backgroundColor: Colors.tertiary,
+    marginTop: 10,
+    borderRadius: Size.xs,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  tabBarPanel: {
+    width: width * 0.41,
+    height: 30,
+    borderRadius: Size.xs,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tabBarPanelActive: {
+    backgroundColor: Colors.secondary,
+  },
+  tabBarText: {
+    color: Colors.white,
+  },
 });

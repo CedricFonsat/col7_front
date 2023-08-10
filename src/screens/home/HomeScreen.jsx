@@ -21,67 +21,12 @@ import Animated from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGetCollectionCardsQuery } from "../../store/slices/collectionCardSlice";
 import { useUsersListHomeQuery } from "../../store/slices/authSlice";
+import env from "../../data/env";
 
-const DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "Axie Infinity",
-    otherImage:
-      "https://1734811051.rsc.cdn77.org/data/images/full/389843/axie-infinity-token-1548.png",
-    image:
-      "https://www.business2community.com/it/wp-content/uploads/sites/10/2022/07/axie.jpg",
-    description: "New collection",
-    author: "collect7",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Second Item",
-    otherImage:
-      "https://1734811051.rsc.cdn77.org/data/images/full/389837/axie-infinity-token-265.png",
-    image:
-      "https://www.business2community.com/it/wp-content/uploads/sites/10/2022/07/axie.jpg",
-    description: "New collection",
-    author: "collect7",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-    otherImage:
-      "https://1734811051.rsc.cdn77.org/data/images/full/389840/axie-infinity-token-1330.png",
-    image:
-      "https://www.business2community.com/it/wp-content/uploads/sites/10/2022/07/axie.jpg",
-    description: "New collection",
-    author: "collect7",
-  },
-];
 
-const PROMO = "https://coinmoi.com/wp-content/uploads/2021/07/banner-11.jpg";
-
-const USER = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "Test123",
-    avatar:
-      "https://nfts.wtf/wp-content/uploads/2021/10/1_iS8lhECY5Eul2cBd8CucDQ-9e73e80e93715f32ad3a41cdd2f56e50-1024x1024.jpeg",
-    money: 2000,
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Collect7",
-    avatar:
-      "https://nfts.wtf/wp-content/uploads/2021/10/1_iS8lhECY5Eul2cBd8CucDQ-9e73e80e93715f32ad3a41cdd2f56e50-1024x1024.jpeg",
-    money: 2000,
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "TheRock",
-    avatar:
-      "https://nfts.wtf/wp-content/uploads/2021/10/1_iS8lhECY5Eul2cBd8CucDQ-9e73e80e93715f32ad3a41cdd2f56e50-1024x1024.jpeg",
-    money: 2000,
-  },
-];
 
 const HomeScreen = ({ navigation }) => {
+
   const handleLogout = async () => {
     try {
       console.log("boss twap");
@@ -183,7 +128,7 @@ const HomeScreen = ({ navigation }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: image,
+                uri: `${env.IMAGE_URL_COLLECTION}/${image}`,
               }}
             />
           </View>
@@ -207,65 +152,6 @@ const HomeScreen = ({ navigation }) => {
 
   const CollectionList = () => {
     const handleItemPress = (itemId) => {
-      navigation.navigate("Detail", { itemId: itemId });
-    };
-
-    return (
-      <View style={styles.collectionList}>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={DATA}
-          renderItem={({ item }) => (
-            <CollectionItem
-              title={item.title}
-              image={item.image}
-              logo={item.otherImage}
-              onPress={() => handleItemPress(item.title)}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
-    );
-  };
-
-  const CollectionItem2 = ({ title, image, logo, onPress }) => {
-    return (
-      <TouchableOpacity onPress={onPress} activeOpacity={1}>
-        <Animated.View
-          style={styles.collectionItem}
-          onPress={onPress}
-          sharedTransitionTag="sharedTag"
-        >
-          <View style={styles.cover}>
-            <Image
-              style={styles.avatar}
-              source={{
-                uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/collections/${image}`,
-              }}
-            />
-          </View>
-          <Text style={styles.collectionItemTitle}>{title}</Text>
-          <LinearGradient
-            colors={["transparent", "rgba(0,0,0,0.6)"]}
-            style={styles.background}
-          />
-          <View style={styles.collectionItemFloat}>
-            <Image
-              style={styles.avatar}
-              source={{
-                uri: logo,
-              }}
-            />
-          </View>
-        </Animated.View>
-      </TouchableOpacity>
-    );
-  };
-
-  const CollectionList2 = () => {
-    const handleItemPress = (itemId) => {
       navigation.navigate("CollectionDetail", { itemId: itemId });
     };
 
@@ -281,7 +167,7 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             data={collectionData}
             renderItem={({ item }) => (
-              <CollectionItem2
+              <CollectionItem
                 title={item.name}
                 image={item.imageName}
                 // logo={item.otherImage}
@@ -295,14 +181,14 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
-  const BestCollectorItem = ({ title, money, avatar }) => {
+  const BestCollectorItem = ({ title, money, avatar, onPress }) => {
     return (
-      <View style={styles.bestCollectorItem}>
+      <TouchableOpacity style={styles.bestCollectorItem} onPress={onPress}>
         <View style={styles.bestCollectorItemAvatar}>
           <Image
             style={styles.avatar}
             source={{
-              uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/users/${avatar}`,
+              uri: `${env.IMAGE_URL_USER}/${avatar}`,
             }}
           />
         </View>
@@ -312,11 +198,16 @@ const HomeScreen = ({ navigation }) => {
             Floor price: {money} C7
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   const BestCollectorList = () => {
+
+    const handleItemPress = (itemId) => {
+      navigation.navigate("UserDetailScreen", { itemId: itemId });
+    };
+
     return (
       <View style={styles.bestCollectorList}>
         {usersError ? (
@@ -336,9 +227,10 @@ const HomeScreen = ({ navigation }) => {
                 title={item[0].nickname}
                 avatar={item[0].imageName}
                 money={item.totalPrice}
+                onPress={() => {handleItemPress(item)}}
               />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item[0].id}
           />
         ) : null}
       </View>
@@ -353,10 +245,6 @@ const HomeScreen = ({ navigation }) => {
           {headerShow()}
           {SearchBar()}
           {CollectionList()}
-          <View style={styles.bestCollectorBlockTitle}>
-            <Text style={styles.bestCollectorTitle}>Teste avec vrai data</Text>
-          </View>
-          {CollectionList2()}
           <View style={styles.bestCollectorBlockTitle}>
             <Text style={styles.bestCollectorTitle}>Best collector</Text>
           </View>

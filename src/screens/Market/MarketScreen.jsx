@@ -7,6 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Card from '../../components/Card'
 import { BlurView } from 'expo-blur'
 import { useGetCardsQuery } from '../../store/slices/cardSlice'
+import env from '../../data/env'
 
 const HEADER_HEIGHT = 300;
 
@@ -15,63 +16,17 @@ const MarketScreen = ({navigation}) => {
   const {data, error, isLoading } = useGetCardsQuery();
 
     const dataMe = {
-        email: 'Axie@gmail.com',
-        username: 'Axie',
+        email: 'hello@collect7.com',
+        username: 'Market Screen',
         image: 'https://fiverr-res.cloudinary.com/t_main1,q_auto,f_auto/gigs/257218235/original/5516cb5c85fbf3a1df3a293f62dbf78a3e78f960.png'
     }
 
-    const datea = [
-        { id: '1', name: 'AAAAA', price: 200, image: 'https://cdnb.artstation.com/p/assets/images/images/049/713/917/large/nft-artist-screenshot-20220520-214533.jpg?1653142270'
-    },
-        { id: '2', name: 'BBBB', price: 200, image: 'https://cdnb.artstation.com/p/assets/images/images/049/713/917/large/nft-artist-screenshot-20220520-214533.jpg?1653142270'
-    },
-        { id: '3', name: 'CCC', price: 600,  image: 'https://cdnb.artstation.com/p/assets/images/images/049/713/917/large/nft-artist-screenshot-20220520-214533.jpg?1653142270'
-    },
-        { id: '4', name: 'jjjjjjj', price: 800 ,  image: 'https://cdnb.artstation.com/p/assets/images/images/049/713/917/large/nft-artist-screenshot-20220520-214533.jpg?1653142270'
-    },
-        { id: '5', name: 'SSS', price: 200, image: 'https://cdnb.artstation.com/p/assets/images/images/049/713/917/large/nft-artist-screenshot-20220520-214533.jpg?1653142270'
-    }
-      ];
 
    // const {data: dataMe, error: errorMe, isLoading: loadingMe} = useMeQuery()
 
   //  const { data, error, isLoading } = useGetCardsQuery();
   
-  
-  const leftButton = () => {
-    return (
-      <TouchableOpacity style={{
-        width: 50,
-        height: 50,
-        borderRadius: Size.xl,
-      //  backgroundColor: Colors.primary, 
-        justifyContent: 'center',
-        alignItems: 'center', 
-        borderColor: Colors.borderColor,
-        borderWidth: 1,
-        overflow: 'hidden'
-      }}
-      onPress={() => navigation.goBack()}
-      >
-        {/* <Image style={{
-          width: 20,
-          height: 20,
-          tintColor: Colors.white,
-        }} source={arrow} /> */}
-       <BlurView style={{
-         width: "100%",
-         height: "100%",
-         justifyContent: 'center',
-         alignItems: 'center', 
-       }}>
-       <Text style={{
-         color: 'white',
-         fontSize: Size.fs24
-       }}>o</Text>
-       </BlurView>
-      </TouchableOpacity>
-    )
-  }
+
   
   const renderHeaderBar = () => {
     return (
@@ -189,7 +144,6 @@ const MarketScreen = ({navigation}) => {
         justifyContent: 'flex-end',
         paddingHorizontal: Size.default
       }}>
-        {leftButton()}
       </View>
     )
   }
@@ -207,7 +161,7 @@ const MarketScreen = ({navigation}) => {
           <Card  key={item.id} name={item.name} price={item.price}
             bid="flex"
             image={{
-              uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/cards/${item.imageName}`
+              uri: `${env.IMAGE_URL_CARD}/${item.imageName}`
             }}
           //   onPress={handleSubmit} 
             />

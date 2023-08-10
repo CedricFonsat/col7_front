@@ -5,21 +5,24 @@ import Colors from "../constants/Colors";
 import Size from "../constants/Size";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useMeQuery } from "../store/slices/authSlice";
+import env from "../data/env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from '@react-navigation/native';
 
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
-const handleLogout = async () => {
-  try {
+const CustomDrawer = (props) => {
+
+  const navigation = useNavigation();
+
+  const handleLogout = async () => {
+
     console.log('boss twap');
     await AsyncStorage.removeItem("@token");
     navigation.replace("SplashScreen");
-  } catch (error) {
-    // Handle error if needed
-  }
-};
 
-const CustomDrawer = (props) => {
+};
 
   const {data: meData, error: meError, isLoading: meIsLoading } = useMeQuery();
 
@@ -68,7 +71,7 @@ const CustomDrawer = (props) => {
         : meData ? (
          <Image
            source={{
-            uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/users/${meData.imageName}`
+            uri: `${env.IMAGE_URL_USER}/${meData.imageName}`
           }}
           style={{
             width: "100%",
@@ -119,20 +122,17 @@ const CustomDrawer = (props) => {
    //  borderTopColor: '#ccc'
    }}>
      <TouchableOpacity 
-     style={{ paddingVertical: 15 }}
-     onPress={handleLogout}
+     style={{ paddingVertical: 20 }}
+     onPress={() => {
+      handleLogout()
+     }}
      >
     <View style={{
       flexDirection: 'row',
       alignItems: 'center'
     }}>
-    <MaterialCommunityIcons style={{
-      color: 'white'
-    }} name="logout" size={26} />
-    <Text style={{
-       color: 'white',
-       marginLeft: 8
-     }}>Se deconnecter</Text>
+    <MaterialCommunityIcons style={styles.white} name="logout" size={26} />
+    <Text style={[styles.white, styles.textLogout]}>Se deconnecter</Text>
     </View>
      </TouchableOpacity>
    </View>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   bottomSheetContainer: {
     height: SCREEN_HEIGHT,
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     position: "absolute",
     top: SCREEN_HEIGHT / 1.5,
     borderRadius: 25,
@@ -157,6 +157,12 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     borderRadius: 2,
   },
+  white: {
+    color: Colors.white
+  },
+  textLogout:{
+    marginLeft: 8
+  }
 });
 
 export default CustomDrawer

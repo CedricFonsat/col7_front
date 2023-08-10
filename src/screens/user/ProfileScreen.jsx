@@ -18,13 +18,11 @@ import { useGetCollectionCardsByIdQuery } from "../../store/slices/collectionCar
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useMeQuery } from "../../store/slices/authSlice";
+import env from "../../data/env";
 
 const HEADER_HEIGHT = 300;
 
 const ProfileScreen = ({ navigation }) => {
-
-
-
 
   const {
     data: collectionData,
@@ -40,42 +38,6 @@ const ProfileScreen = ({ navigation }) => {
 
   console.log(meData);
 
-  const leftButton = ({ navigation }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          width: 50,
-          height: 50,
-          borderRadius: Size.xl,
-          backgroundColor: Colors.primary,
-          justifyContent: "center",
-          alignItems: "center",
-          borderColor: Colors.borderColor,
-          borderWidth: 1,
-          overflow: "hidden",
-          zIndex: 99999,
-        }}
-        onPress={() => navigation.goBack()}
-        activeOpacity={0.8}
-        //onPress pour faire un goBack avec navigation
-      >
-        {/* <Image style={{
-          width: 20,
-          height: 20,
-          tintColor: Colors.white,
-        }} source={arrow} /> */}
-
-        <Text
-          style={{
-            color: "white",
-            fontSize: Size.fs24,
-          }}
-        >
-          GO
-        </Text>
-      </TouchableOpacity>
-    );
-  };
 
   const renderHeaderBar = () => {
     return (
@@ -175,7 +137,6 @@ const ProfileScreen = ({ navigation }) => {
           zIndex: 999,
         }}
       >
-        {leftButton({ navigation })}
       </View>
     );
   };
@@ -190,7 +151,7 @@ const ProfileScreen = ({ navigation }) => {
         id={item.id}
         bid="flex"
         image={{
-          uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/cards/${item.imageName}`,
+          uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
         }}
       />
     );
@@ -243,7 +204,7 @@ const ProfileScreen = ({ navigation }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/users/${meData.imageName}`,
+                uri: `${env.IMAGE_URL_USER}/${meData.imageName}`,
               }}
             />
           </View>
@@ -271,7 +232,7 @@ const ProfileScreen = ({ navigation }) => {
         {/* Background Image */}
         <Animated.Image
           source={{
-            uri: `/Users/cedricfonsat/Documents/IOTA/FINAL_PROJECT/col7_bo/public/uploads/users/${meData.imageName}`,
+            uri: `${env.IMAGE_URL_USER}/${meData.imageName}`,
           }}
           sharedTransitionTag="sharedTag"
           // resizeMode="contain"
