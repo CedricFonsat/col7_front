@@ -1,109 +1,138 @@
-import React, { useState } from 'react'
-import { ScrollView, Text, TouchableOpacity, StyleSheet, View, Button, Image } from 'react-native'
-import Colors from '../constants/Colors';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from "react";
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Button,
+  Image,
+} from "react-native";
+import Colors from "../constants/Colors";
+import * as ImagePicker from "expo-image-picker";
+import { useUserImageMutation } from "../store/slices/authSlice";
 
 const TestScreen = () => {
 
-    // const handleUpdate = async (data) => {
-    //     if (selectedImage) {
-    //       dispatch(setLoading(true))
-    //       let formData = new FormData()
-    //       formData.append('image', {
-    //         uri: selectedImage.uri,
-    //         name: 'photo.jpg',
-    //         type: 'image/jpg',
-    //       })
-    
-    //       formData.append('userId', user?.id)
-    //       formData.append('main', 1)
-    //       await PhotoService.postPhoto(formData)
-    //     }
+  const [userImage] = useUserImageMutation();
 
-    const [image, setImage] = useState(null);
+   const uploadImage = async (base64,name) => {
+    const formData = {
+      name: name,
+      base64: base64
+    }
 
-    let tab = [];
+    console.log(formData);
+
+    await userImage(formData)
+    .unwrap()
+    .then((res) => {
+     // console.log(res);
+
+      console.log('good job');
   
-    const pickImage = async () => {
-      // No permissions request is necessary for launching the image library
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-  
-      tab = result.assets
-  
-     if (tab) {
-        const results = tab.map(item => {
-            const { fileSize, fileName } = item;
-            return { fileSize, fileName };
+    })
+    .catch((err) => console.log("pas bon", err));
+   };
+
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+     // console.log(result.assets);
+      setImage(result.assets[0].uri);
+      //uploadImage(result.assets[0].uri);
+
+      let uri = result.assets[0].uri;
+
+      // Fonction pour charger une image et la convertir en base64
+      const uriToBase64 = async (uri) => {
+        try {
+          const response = await fetch(uri);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve(reader.result.split(",")[1]);
+            };
+            reader.onerror = (error) => {
+              reject(error);
+            };
+            reader.readAsDataURL(blob);
           });
-          console.log(results);
-          console.log(tab);
-     }
-      
-     
-     
-  
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
-    };
-  
-  
-
-    const handleImage =  async() => {
-        console.log('test1');
-    
-          let formData =  {
-            uri: 'jjjjjfffff.com',
-            name: 'photo.jpg',
-            type: 'image/jpg',
-          }
-
-         console.log(formData);
-    
-    //    await login(formData)
-    //       .unwrap()
-    //       .then((res) => {
-
-    //         console.log(res);
-        
-    //       })
-    //       .catch(() => console.log("pas bon"));
-    
+        } catch (error) {
+          console.error(
+            "Erreur lors de la conversion de l'image en base64:",
+            error
+          );
+          throw error;
+        }
       };
+
+      // Utilisation de la fonction
+      uriToBase64(uri)
+        .then((base64Data) => {
+           if (base64Data) {
+            uploadImage(base64Data,'test.jpg')
+           }
+        })
+        .catch((error) => {
+          console.error("Une erreur s'est produite:", error);
+        });
+    }
+  };
 
   return (
     <View style={styles.container}>
-       <Text>Test Screen</Text>
-       <Button style={{
-        width: 300,
-        height: 40,
-        backgroundColor: Colors.primary
-      }} title="Pick an image from camera roll" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-        <TouchableOpacity onPress={() => { handleImage() }} style={{
-            backgroundColor: 'blue',
-            width: 200,
-            height: 60
-        }}>
-            <Text>Test</Text>
-        </TouchableOpacity>
-       
+      <Text>Test Screen</Text>
+      <Button
+        style={{
+          width: 300,
+          height: 40,
+          backgroundColor: Colors.primary,
+        }}
+        title="Pick an image from camera roll"
+      />
+      {image && (
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+      )}
+      <Text
+        style={{
+          color: "white",
+          fontSize: 39,
+        }}
+      >
+        {image ? "carre" : "super"}
+      </Text>
+      <TouchableOpacity
+        onPress={pickImage}
+        style={{
+          backgroundColor: "blue",
+          width: 200,
+          height: 60,
+        }}
+      >
+        <Text>Test</Text>
+      </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default TestScreen
+export default TestScreen;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: Colors.primary,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-})
+  container: {
+    flex: 1,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
