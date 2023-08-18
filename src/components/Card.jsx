@@ -17,6 +17,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useBuyCardByIdMutation, useGetCardsQuery } from "../store/slices/cardSlice";
 import { useMeQuery } from "../store/slices/authSlice";
+import favoris from '../../assets/icon/favoris.png';
+import addFavoris from '../../assets/icon/add-favoris.png'
+
 
 export default function Card({ name, price, bid, onPress, image, id, favorite }) {
 
@@ -57,18 +60,22 @@ export default function Card({ name, price, bid, onPress, image, id, favorite })
         onPress={onPress}
       >
         <View style={styles.favorite}>
+        
+       
           {favorite ? (
-          <View style={{
-            backgroundColor: 'purple',
-            width: '100%',
-            height: '100%'
-          }}></View>
+             <Image source={addFavoris} style={styles.iconFavorite}/> 
+          // <View style={{
+          //   backgroundColor: 'purple',
+          //   width: '100%',
+          //   height: '100%'
+          // }}></View>
           ) : (
-            <View style={{
-              backgroundColor: 'pink',
-              width: '100%',
-              height: '100%'
-            }}></View>
+            <Image source={favoris} style={styles.iconFavorite}/> 
+            // <View style={{
+            //   backgroundColor: 'pink',
+            //   width: '100%',
+            //   height: '100%'
+            // }}></View>
           )
         }
 
@@ -188,9 +195,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    width: 30,
-    height: 30,
-    backgroundColor: 'blue',
+    width: 40,
+    height: 40,
+    borderRadius: Size.xl,
+    backgroundColor: 'rgba(245,230,222,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
     zIndex: 999
+  },
+  iconFavorite:{
+    width: 20,
+    height: 20,
   }
 });

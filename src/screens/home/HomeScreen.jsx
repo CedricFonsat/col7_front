@@ -50,6 +50,10 @@ const HomeScreen = ({ navigation }) => {
   } = useGetCollectionCardsQuery();
   //const {data: usersData, error: usersError, isLoading: usersIsLoading} = useGetUsersHomeQuery();
 
+  if (collectionData) {
+    console.log(`${env.IMAGE_URL_USER}/${collectionData[0].imageName}`);
+  }
+
   const {
     data: usersData,
     error: usersError,
@@ -71,17 +75,6 @@ const HomeScreen = ({ navigation }) => {
     return (
       <View style={styles.headerShow}>
         <View>
-          <TouchableOpacity
-            style={{
-              width: 100,
-              height: 30,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={handleLogout}
-          >
-            <Text>logout</Text>
-          </TouchableOpacity>
           <Text style={styles.titleHeaderShow}>
             Explore the most {"\n"}popular{" "}
             <Text style={styles.itemNFT}>NFT</Text> items

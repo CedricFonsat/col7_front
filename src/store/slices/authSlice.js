@@ -32,7 +32,7 @@ export const authApi = createApi({
     }),
     userImage: builder.mutation({
       query: (body) => ({
-        url: "/users/upload/image",
+        url: "/users/upload_image",
         method: "POST",
         body,
       }),
@@ -49,7 +49,27 @@ export const authApi = createApi({
         method: "Get",
       }),
     }),
+    favoriteCard: builder.mutation({
+      query: (rest) => {
+        const { id, cardId } = rest; // Déplacer la déclaration de la variable id ici
+        return {
+          url: `/users/${id}/add_favorite/${cardId}`,
+          method: 'POST',
+          body: rest,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation ,useMeQuery, useUsersListHomeQuery, useUserImageMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useMeQuery,
+  useUsersListHomeQuery,
+  useUserImageMutation,
+  useFavoriteCardMutation,
+} = authApi;

@@ -48,7 +48,9 @@ const SplashScreen = () => {
   // }, [navigation]);
 
   return (
-    <View style={styles.container} />
+    <View style={styles.container} >
+      <View style={styles.loading}></View>
+    </View>
   );
 };
 
@@ -57,7 +59,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'green'
   },
+  loading:{
+    width: 200,
+    height: 200,
+    backgroundColor: 'yellow'
+  }
 });
 
 export default SplashScreen;

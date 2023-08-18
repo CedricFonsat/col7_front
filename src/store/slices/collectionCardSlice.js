@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import env from "../../data/env";
 
 export const collectionCardApi = createApi({
   reducerPath: "collectionCardApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://127.0.0.1:8000/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: env.API_URL }),
   endpoints: (builder) => ({
     getCollectionCards: builder.query({
       query: () => ({

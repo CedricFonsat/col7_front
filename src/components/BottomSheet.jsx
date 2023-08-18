@@ -1,21 +1,53 @@
-import React from "react";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
-import { PanGestureHandler, GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated from "react-native-reanimated";
+import React, { useCallback, useMemo, useRef } from 'react';
+import { View, Text, StyleSheet, Button, Dimensions } from 'react-native';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const BottomSheet = () => {
-  const gesture = React.createRef();
+const BottomSheet = (bottomSheetModalRef) => {
+
+  // variables
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+  const renderBackdrop = useCallback((props) => {
+    return (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    );
+  }, []);
+
+  // callbacks
+  // const handlePresentModalPress = useCallback(() => {
+  //   bottomSheetModalRef.current?.present();
+  // }, []);
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   return (
-    <GestureHandlerRootView>
-        <Animated.View style={styles.bottomSheetContainer}>
-          <View style={styles.line} />
-        </Animated.View>
-    </GestureHandlerRootView>
+    <BottomSheetModalProvider>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        backdropComponent={renderBackdrop}
+      >
+        <View style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheetModal>
+  </BottomSheetModalProvider>
   );
 };
+
+export default BottomSheet
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {

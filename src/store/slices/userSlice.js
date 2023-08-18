@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import env from "../../data/env";
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://127.0.0.1:8000/api",
+    baseUrl: env.API_URL,
     prepareHeaders: async (headers) => {
       const user = await AsyncStorage.getItem("@token");
       if (user) {
