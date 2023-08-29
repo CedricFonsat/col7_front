@@ -16,15 +16,21 @@ import { useGetCollectionCardsByIdQuery } from "../../../store/slices/collection
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useBuyCardByIdMutation, useGetCardsQuery } from "../../../store/slices/cardSlice";
-import { useMeQuery, useFavoriteCardMutation } from "../../../store/slices/authSlice";
-import arrow from '../../../../assets/icon/left.png';
+import {
+  useBuyCardByIdMutation,
+  useGetCardsQuery,
+} from "../../../store/slices/cardSlice";
+import {
+  useMeQuery,
+  useFavoriteCardMutation,
+} from "../../../store/slices/authSlice";
+import arrow from "../../../../assets/icon/left.png";
 
-import favoris from '../../../../assets/icon/favoris.png';
-import addFavoris from '../../../../assets/icon/add-favoris.png'
+import favoris from "../../../../assets/icon/favoris.png";
+import addFavoris from "../../../../assets/icon/add-favoris.png";
 
 import env from "../../../data/env";
-
+import RenderHtml from 'react-native-render-html';
 
 const HEADER_HEIGHT = 300;
 
@@ -43,60 +49,47 @@ const CollectionDetail = ({ navigation, route }) => {
     data: collectionData,
     error: collectionError,
     isLoading: collectionIsLoading,
-    refetch: collectionRefetch
+    refetch: collectionRefetch,
   } = useGetCollectionCardsByIdQuery(itemId);
 
-  const availableCards = collectionData?.cards.filter((item) => item.ifAvailable);
+  const availableCards = collectionData?.cards.filter(
+    (item) => item.ifAvailable
+  );
 
-  const buyItem = async(id) => {
-
+  const buyItem = async (id) => {
     const rest = {
-      'id': id,
-      'userId': data.id,
+      id: id,
+      userId: data.id,
     };
 
-    console.log(rest);
-
-    await buyCardById(rest).then((res) => {
-     
+    await buyCardById(rest)
+      .then((res) => {
         console.log(res);
-    
       })
       .catch(() => console.log("pas bon"));
-    console.log(rest);
     collectionRefetch();
     meRefetch();
   };
 
-  const handleCardFavorite = async(id) => {
-
+  const handleCardFavorite = async (id) => {
     const favoriteCardById = {
-      'id': data.id,
-      'cardId': id
+      id: data.id,
+      cardId: id,
     };
 
-    console.log(favoriteCardById);
+    await favoriteCard(favoriteCardById)
+      .then((res) => {
+        console.log(res, "**** carte ajoute en favoris ****");
+      })
+      .catch(() => console.log("pas bon"));
 
-    await favoriteCard(favoriteCardById).then((res) => {
-     
-      console.log(res, '**** carte ajoute en favoris ****');
-  
-    })
-    .catch(() => console.log("pas bon"));
-  collectionRefetch();
-  meRefetch();
-  }
+    collectionRefetch();
+    meRefetch();
+  };
 
-
-//  const isCardInArray = (cardId) => {
-//   return data.some(entry => entry.card_favoris.some(card => card.id === cardId));
-// };
-
-
-const isCardInFavorites = (cardId) => {
-  return data.card_favoris.some(card => card.id === cardId);
-};
-
+  const isCardInFavorites = (cardId) => {
+    return data.card_favoris.some((card) => card.id === cardId);
+  };
 
   const leftButton = ({ navigation }) => {
     return (
@@ -115,13 +108,15 @@ const isCardInFavorites = (cardId) => {
         }}
         onPress={() => navigation.goBack()}
         activeOpacity={0.8}
-        //onPress pour faire un goBack avec navigation
       >
-         <Image style={{
-          width: 20,
-          height: 20,
-          tintColor: Colors.white,
-        }} source={arrow} /> 
+        <Image
+          style={{
+            width: 20,
+            height: 20,
+            tintColor: Colors.white,
+          }}
+          source={arrow}
+        />
       </TouchableOpacity>
     );
   };
@@ -142,7 +137,6 @@ const isCardInFavorites = (cardId) => {
           paddingBottom: 10,
         }}
       >
-        {/* Screen Overlay */}
         <Animated.View
           style={{
             position: "absolute",
@@ -157,8 +151,6 @@ const isCardInFavorites = (cardId) => {
             }),
           }}
         />
-
-        {/* Header Bar Title */}
         <Animated.View
           style={{
             position: "absolute",
@@ -209,7 +201,6 @@ const isCardInFavorites = (cardId) => {
         style={{
           width: width,
           height: 100,
-          // backgroundColor: Colors.secondary,
           position: "absolute",
           justifyContent: "flex-end",
           paddingHorizontal: Size.default,
@@ -221,115 +212,127 @@ const isCardInFavorites = (cardId) => {
     );
   };
 
-
-
-
   const renderItems = ({ item, index }) => {
-   if (item.ifAvailable == true) {
-
-    if (item.users) {
-      const modifiedUsers = item.users.map(user => {
-          // Vous pouvez effectuer une opération sur chaque élément user ici
-          // Par exemple, ajouter une nouvelle propriété, modifier une valeur, etc.
+    if (item.ifAvailable == true) {
+      if (item.users) {
+        const modifiedUsers = item.users.map((user) => {
           if (user?.id == 2) {
-            return true
+            return true;
           }
-          
-          // Dans cet exemple, nous allons simplement retourner l'élément user inchangé
+
           return false;
-      });
-  
-     // console.log("Tableau modifié avec la méthode map : ", modifiedUsers ? 'yes' : 'no',modifiedUsers);
-      // if (modifiedUsers === true) {
-      //   console.log('true');
-      // }else if (modifiedUsers === false) {
-      //   console.log('false');
-      // } 
-     
-    }
-  
+        });
+      }
 
-    return (
       
-      <>
-      <Card
-        key={item.id}
-        name={item.name}
-        price={item.price}
-        id={item.id}
-        onPress={() => {
-          handlePresentModalPress(item)}}
-        bid="flex"
-        favorite={isCardInFavorites(item.id) ? (
-          true
-        ) : (
-          false
-        )}
-        image={{
-          uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
-        }}
-      />
-    <BottomSheetModal
-      ref={bottomSheetRef}
-      index={0}
-      snapPoints={["40%"]}
-      backdropComponent={renderBackdrop}
-    // onChange={handleSheetChanges}
-    >
-      <View style={styles.contentContainer}>
-        {/* IMPORTANT trouver une solution pour changer l'affichage du bottom si deja acheter IMPORTANT */}
-        <TouchableOpacity style={styles.bottomSheetFavoris} onPress={() => {
 
-          if(isCardInFavorites(selectedCard?.id)){
-            setIsFavoris(false)
-          }else{
-            setIsFavoris(true)
-          }
-
-          handleCardFavorite(selectedCard?.id)
-        }}>
-            <Image source={isCardInFavorites(selectedCard?.id) ? addFavoris : favoris} style={styles.iconBottomSheet}/> 
-        </TouchableOpacity>
-        
-          <View>
-            <View style={styles.infosHeadBottomSheet}>
-              <View style={styles.contentAvatarBottomSheet}>
-                <Image style={styles.avatarBottomSheet} source={{
-                  uri: 'https://media.sketchfab.com/models/7b9a05ad2bfc42eca59141d550a868e2/thumbnails/c0a545aba25e4fc1a27a040429227266/cd1f9baf456146ab948056ff64f83b51.jpeg'
+      return (
+      
+        <>
+          <Card
+            key={item.id}
+            name={item.name}
+            price={item.price}
+            id={item.id}
+            onPress={() => {
+              handlePresentModalPress(item);
+            }}
+            bid="flex"
+            favorite={isCardInFavorites(item.id)}
+            image={{
+              uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
+            }}
+          />
+          <BottomSheetModal
+            ref={bottomSheetRef}
+            index={0}
+            snapPoints={["40%"]}
+            backdropComponent={renderBackdrop}
+          >
+            <View style={styles.contentContainer}>
+              <TouchableOpacity
+                style={styles.bottomSheetFavoris}
+                onPress={async() => {
+                  console.log(isCardInFavorites(selectedCard.id))
+                 await handleCardFavorite(selectedCard?.id);
                 }}
+              >
+                <Image
+                  source={
+                    isCardInFavorites(selectedCard?.id) ? addFavoris : favoris
+                  }
+                  style={styles.iconBottomSheet}
                 />
-              </View>
+              </TouchableOpacity>
+
               <View>
-                <Text style={styles.textMediumBottomSheet}>By Collect7</Text>
-                <Text style={styles.textTitleBottomSheet}>{selectedCard?.name}</Text>
-                <Text style={styles.textMediumBottomSheet}>On sale for <Text style={styles.colorTertiary}>{selectedCard?.price} C7</Text></Text>
+                <View style={styles.infosHeadBottomSheet}>
+                  <View style={styles.contentAvatarBottomSheet}>
+                    <Image
+                      style={styles.avatarBottomSheet}
+                      source={{
+                        uri: "https://media.sketchfab.com/models/7b9a05ad2bfc42eca59141d550a868e2/thumbnails/c0a545aba25e4fc1a27a040429227266/cd1f9baf456146ab948056ff64f83b51.jpeg",
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <Text style={styles.textMediumBottomSheet}>
+                      By Collect7
+                    </Text>
+                    <Text style={styles.textTitleBottomSheet}>
+                      {selectedCard?.name}
+                    </Text>
+                    <Text style={styles.textMediumBottomSheet}>
+                      On sale for{" "}
+                      <Text style={styles.colorTertiary}>
+                        {selectedCard?.price} C7
+                      </Text>
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.descriptionBottomSheet}>
+                  <Text style={styles.textSubTitleBottomSheet}>
+                    Description
+                  </Text>
+                  <Text style={styles.textMediumBottomSheet}>
+                    Meka from the MekaVerse - A collection of 8,888 unique
+                    generative NFTs from an other universe.
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.buttonBottomSheet}
+                  onPress={() => {
+                    buyItem(selectedCard?.id);
+                  }}
+                >
+                  <Text style={styles.textButtonBottomSheet}>
+                    Buy '{"=>"}' Id: {selectedCard?.id} 🎉
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.descriptionBottomSheet}>
-              <Text style={styles.textSubTitleBottomSheet}>Description</Text>
-              <Text style={styles.textMediumBottomSheet}>Meka from the MekaVerse - A collection of 8,888 unique generative NFTs from an other universe.</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.buttonBottomSheet}
-              onPress={() => {
-                  buyItem(selectedCard?.id);          
-              }}
-            >
-              <Text style={styles.textButtonBottomSheet}>Buy '{'=>'}' Id: {selectedCard?.id} 🎉</Text>
-            </TouchableOpacity>
-          </View>
-      </View>
-    </BottomSheetModal>
-    </>
-    );
-   }
+          </BottomSheetModal>
+        </>
+      );
+    }
+  };
+
+  const source = {
+    html: collectionData?.description
+  };
+
+  const tagsStyles = {
+    div: {
+      whiteSpace: 'normal',
+      color: 'white',
+      fontSize: 16
+    }
   };
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const bottomSheetRef = useRef(null);
   const handlePresentModalPress = useCallback((item) => {
-  //  console.log(item.id);
     setSelectedCard(item);
     bottomSheetRef.current?.present();
   }, []);
@@ -354,7 +357,6 @@ const isCardInFavorites = (cardId) => {
           overflow: "hidden",
         }}
       >
-        {/* Background Image */}
         <Animated.Image
           source={{
             uri: `${env.IMAGE_URL_COLLECTION}/${collectionData.imageName}`,
@@ -418,7 +420,6 @@ const isCardInFavorites = (cardId) => {
     );
   };
 
-
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
@@ -436,11 +437,29 @@ const isCardInFavorites = (cardId) => {
               showsVerticalScrollIndicator={false}
               ListHeaderComponent={
                 <View>
-                  {/* Header */}
-                  {/* Probable emplacement de SharedElement */}
                   {renderCollectionHeader()}
-
-                  {/* Title */}
+                 <View style={styles.renderCollectionDescription}>
+                     <View style={styles.renderDescription}>
+                     {collectionError ? (
+              <Text style={styles.renderText}>Oh no, there was an error</Text>
+            ) : collectionIsLoading ? (
+              <Text style={styles.renderText}>Loading...</Text>
+            ) : collectionData ? (
+              <>
+              <RenderHtml
+      contentWidth={width}
+      source={source}
+      tagsStyles={tagsStyles}
+    />
+              <View style={styles.renderCategory}>
+                <Text style={styles.renderCategoryText}>{collectionData.category.name}</Text>
+              </View>
+              </>
+            ) : (
+              <Text style={styles.renderText}>Null</Text>
+            )}
+                     </View>
+                 </View>
                   <View
                     style={{
                       height: 100,
@@ -457,12 +476,9 @@ const isCardInFavorites = (cardId) => {
               )}
             />
           ) : null}
-
           {renderHeader()}
-
-          {/* Header Bar */}
-          {renderHeaderBar()}
           
+          {renderHeaderBar()}
         </View>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
@@ -477,7 +493,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    //  flex: 1,
     backgroundColor: Colors.primary,
   },
   background: {
@@ -504,7 +519,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginTop: 10,
-    position: 'relative'
+    position: "relative",
   },
   buttonBottomSheet: {
     width: width * 0.88,
@@ -513,60 +528,83 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: Size.default,
-    borderRadius: Size.xs
+    borderRadius: Size.xs,
   },
   infosHeadBottomSheet: {
-    flexDirection: 'row',
-    paddingHorizontal: Size.default
+    flexDirection: "row",
+    paddingHorizontal: Size.default,
   },
-  contentAvatarBottomSheet:{
+  contentAvatarBottomSheet: {
     width: 80,
     height: 80,
     backgroundColor: Colors.secondary,
     marginRight: Size.default,
     borderRadius: Size.xl,
-    overflow: 'hidden'
+    overflow: "hidden",
   },
-  avatarBottomSheet:{
-    width: '100%',
-    height: '100%'
+  avatarBottomSheet: {
+    width: "100%",
+    height: "100%",
   },
-  textTitleBottomSheet:{
+  textTitleBottomSheet: {
     fontSize: Size.fs20,
     fontWeight: Size.bold,
   },
-  textMediumBottomSheet:{
+  textMediumBottomSheet: {
     fontSize: Size.fs18,
     color: Colors.gray,
-    fontWeight: Size.w600
+    fontWeight: Size.w600,
   },
-  descriptionBottomSheet:{
+  descriptionBottomSheet: {
     paddingHorizontal: Size.default,
-    marginVertical: Size.default
+    marginVertical: Size.default,
   },
   textButtonBottomSheet: {
     fontSize: Size.fs20,
     fontWeight: Size.bold,
-    color: Colors.white
+    color: Colors.white,
   },
   textSubTitleBottomSheet: {
     fontSize: Size.fs18,
     fontWeight: Size.bold,
-    marginBottom: Size.xs
+    marginBottom: Size.xs,
   },
-  bottomSheetFavoris:{
-    position: 'absolute',
+  bottomSheetFavoris: {
+    position: "absolute",
     right: 30,
     width: 50,
     height: 50,
     borderRadius: Size.xl,
-    backgroundColor: 'rgba(245,230,222,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 9999999
+    backgroundColor: "rgba(245,230,222,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999999,
   },
   iconBottomSheet: {
     width: 20,
-    height: 20
+    height: 20,
+  },
+  renderCollectionDescription: {
+    width: width,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  renderDescription: {
+    width: width * 0.96,
+    marginTop: Size.small,
+  },
+  renderText: {
+    color: Colors.white,
+    fontSize: Size.fs16
+  },
+  renderCategory: {
+    width: width * 0.3,
+    height: 35,
+    backgroundColor: Colors.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: Size.small,
+    borderRadius: Size.xl
   }
 });

@@ -34,9 +34,30 @@ export const cardApi = createApi({
         };
       },
     }),
+    searchCard: builder.mutation({
+      query: (rest) => {
+        return {
+          url: '/cards/search',
+          method: 'POST',
+          body: rest,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+    }),
+    getSearchCards: builder.query({
+      query: (query) => ({ // Accept id as a parameter
+        url: `/cards/${query}/`, // Customize the URL with the id
+        method: "Get",
+        headers: {
+          accept: "application/json",
+        },
+      }),
+    }),
     
   }),
 });
 
 // Extrait les hooks pour utiliser les endpoints
-export const { useGetCardsQuery, useBuyCardMutation, useBuyCardByIdMutation } = cardApi;
+export const { useGetCardsQuery, useBuyCardMutation, useBuyCardByIdMutation, useSearchCardMutation } = cardApi;

@@ -30,6 +30,19 @@ export const authApi = createApi({
         body,
       }),
     }),
+    updateUser: builder.mutation({
+      query: (rest) => {
+        const { id } = rest;
+        return {
+          url: `/users/${id}`,
+          method: 'PUT',
+          body: rest,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+    }),
     userImage: builder.mutation({
       query: (body) => ({
         url: "/users/upload_image",
@@ -68,6 +81,7 @@ export const authApi = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useUpdateUserMutation,
   useMeQuery,
   useUsersListHomeQuery,
   useUserImageMutation,

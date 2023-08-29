@@ -7,21 +7,8 @@ import Input from "./components/Input";
 import Button from "./components/Button";
 import { useState } from "react";
 import { useRegisterMutation } from "../../store/slices/authSlice";
-//import * as WebBrowser from 'expo-web-browser';
 
 export default function RegisterScreen() {
-  //const count = useSelector((state) => state.counter.value);
-
-  //  const _handlePressButtonAsync = async () => {
-  //   let result = await WebBrowser.openBrowserAsync('https://youtu.be/LG0Wot3wjCA?list=PLyGifCruBi0maFT6oO-Q9ZsK25iigkwRj');
-  //   setResult(result);
-  // };
-  //<Button title="Open WebBrowser" onPress={_handlePressButtonAsync} />
-
-  // const [loginUser] = useLoginUserMutation();
-  // const { data: queryData, error} = useMeQuery();
-
-  // console.log(queryData);
 
   const [register] = useRegisterMutation();
 
@@ -46,38 +33,11 @@ export default function RegisterScreen() {
         setPassword();
         setEmail('');
         setUsername('');
-       // handleLogin()
     })
     .catch(() =>
         console.log('pas bon')
     )
   };
-
-     const handleLogin = async() => {
-       //navigation.navigate('profile')
-
-       const formData = {
-         "email": email,
-         "password": password
-       }
-
-     console.log(formData);
-
-      await login(formData).unwrap()
-      .then((res) => {
-         console.log('Connecter');
-         console.log(res);
-        AsyncStorage.setItem("@token", res.token)
-        navigation.navigate("SplashScreen");
-      })
-      .catch(() =>
-          console.log('Pas Register Login')
-      )
-      navigation.navigate("SplashScreen");
-     }
-
-  //ced97x@gmail.com
-  //contact@collect7.fr
 
   return (
     <View style={styles.container}>

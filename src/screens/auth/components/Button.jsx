@@ -25,7 +25,7 @@ const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.secondary,
-    width: width * 0.8,
+    width: width * 0.88,
     height: height * 0.07,
     color: Colors.white,
     borderRadius: Size.small,
