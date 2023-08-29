@@ -15,6 +15,7 @@ module.exports = {
     default: 20,
     large: 40,
     xl: 100,
+    xxl: 200,
 
     //=======<BorderRadius Sizes>>=========
     br50: 50,

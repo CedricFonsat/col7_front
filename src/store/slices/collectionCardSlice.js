@@ -23,7 +23,16 @@ export const collectionCardApi = createApi({
         },
       }),
     }),
+    getCollectionCardsComingSoon: builder.query({
+      query: () => ({ // Accept id as a parameter
+        url: '/collection_card/coming_out_soon',
+        method: "Get",
+        headers: {
+          accept: "application/json",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetCollectionCardsQuery, useGetCollectionCardsByIdQuery } = collectionCardApi;
+export const { useGetCollectionCardsQuery, useGetCollectionCardsByIdQuery, useGetCollectionCardsComingSoonQuery } = collectionCardApi;

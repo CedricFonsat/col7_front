@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,11 +7,9 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  VirtualizedList,
 } from "react-native";
 import Size from "../../constants/Size";
 import Colors from "../../constants/Colors";
@@ -22,8 +20,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGetCollectionCardsQuery } from "../../store/slices/collectionCardSlice";
 import { useUsersListHomeQuery } from "../../store/slices/authSlice";
 import env from "../../data/env";
-
-
 
 const HomeScreen = ({ navigation }) => {
 
@@ -37,18 +33,11 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  // const getItemCount = () => DATA.length;
-  // const getItemCountUser = () => USER.length;
-
-  // const getItem = (DATA, index) => DATA[index];
-  // const getItemUser = (USER, index) => USER[index];
-
   const {
     data: collectionData,
     error: collectionError,
     isLoading: collectionIsLoading,
   } = useGetCollectionCardsQuery();
-  //const {data: usersData, error: usersError, isLoading: usersIsLoading} = useGetUsersHomeQuery();
 
   if (collectionData) {
     console.log(`${env.IMAGE_URL_USER}/${collectionData[0].imageName}`);
@@ -59,7 +48,6 @@ const HomeScreen = ({ navigation }) => {
     error: usersError,
     isLoading: usersIsLoading,
   } = useUsersListHomeQuery();
-  //console.log(usersData);
 
   if (usersError) {
     console.log("jjjjj: EROOR");
@@ -89,7 +77,6 @@ const HomeScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.searchBar}
         onPress={() => {
-          /* 1. Navigate to the Details route with params */
           navigation.navigate("Search");
           // navigation.navigate('Details', {
           //   itemId: 86,
@@ -125,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
               }}
             />
           </View>
-          <Text style={styles.collectionItemTitle}>{title}</Text>
+          {/* <Text style={styles.collectionItemTitle}>{title}</Text> */}
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.6)"]}
             style={styles.background}
@@ -138,6 +125,19 @@ const HomeScreen = ({ navigation }) => {
               }}
             />
           </View>
+          <View
+          style={{
+            width: 200,
+            height: 50,
+            position: 'absolute',
+            backgroundColor: 'white',
+            borderTopRightRadius: Size.xl,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          ><Text style={{
+            fontSize: Size.fs24
+          }}>{title}</Text></View>
         </Animated.View>
       </TouchableOpacity>
     );
@@ -301,10 +301,13 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-    height: 150,
+    height: 180,
     width: width * 0.7,
     marginTop: 60,
     justifyContent: "flex-end",
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: Size.small
   },
   collectionItemTitle: {
     fontSize: 32,
@@ -347,6 +350,7 @@ const styles = StyleSheet.create({
     marginTop: Size.default,
     borderRadius: Size.small,
     backgroundColor: Colors.tertiary,
+    overflow: 'hidden',
   },
   bestCollectorItemAvatar: {
     width: 80,
@@ -375,7 +379,7 @@ const styles = StyleSheet.create({
   },
   cover: {
     position: "absolute",
-    height: 150,
+    height: 180,
     width: width * 0.7,
   },
   background: {
