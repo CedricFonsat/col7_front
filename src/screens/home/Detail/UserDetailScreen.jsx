@@ -120,7 +120,7 @@ const UserDetailScreen = ({ navigation, route }) => {
           {user.nickname}
           </Text>
           <Text style={{ color: "white", fontWeight: "bold" }}>
-              @${user.nickname}
+              @{user.nickname}
           </Text>
         </Animated.View>
       </View>
@@ -208,7 +208,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: `${env.IMAGE_URL_USER}/${user.imageName}`,
+                uri: user.imageUrl,
               }}
             />
           </View>
@@ -236,7 +236,7 @@ const UserDetailScreen = ({ navigation, route }) => {
         {/* Background Image */}
         <Animated.Image
           source={{
-            uri: `${env.IMAGE_URL_USER}/${user.imageName}`,
+            uri: user.imageUrl,
           }}
           sharedTransitionTag="sharedTag"
           // resizeMode="contain"

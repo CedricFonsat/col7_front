@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -13,15 +13,29 @@ import {
 } from "react-native";
 import Size from "../../constants/Size";
 import Colors from "../../constants/Colors";
-import { LinearGradient } from "expo-linear-gradient";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Animated from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGetCollectionCardsQuery } from "../../store/slices/collectionCardSlice";
-import { useUsersListHomeQuery } from "../../store/slices/authSlice";
+import { useUsersListHomeQuery, useConnexionMutation, useMeQuery } from "../../store/slices/authSlice";
 import env from "../../data/env";
 
 const HomeScreen = ({ navigation }) => {
+
+  const [connexion] = useConnexionMutation();
+  const { data: meData } = useMeQuery();
+
+
+// useEffect(async() => {
+//  await connexion({userId: meData.id})
+//  .then((res) => {
+
+//  console.log(res);
+// }).catch(() => console.log("pas bon"));
+
+// })
+
+  console.log(meData,'%%%%%%%%%%');
 
   const handleLogout = async () => {
     try {
@@ -113,10 +127,10 @@ const HomeScreen = ({ navigation }) => {
             />
           </View>
           {/* <Text style={styles.collectionItemTitle}>{title}</Text> */}
-          <LinearGradient
+          {/* <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.6)"]}
             style={styles.background}
-          />
+          /> */}
           <View style={styles.collectionItemFloat}>
             <Image
               style={styles.avatar}
@@ -127,16 +141,18 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <View
           style={{
-            width: 200,
-            height: 50,
+           // width: 200,
+           width: width * 0.7,
+            height: 40,
             position: 'absolute',
-            backgroundColor: 'white',
-            borderTopRightRadius: Size.xl,
+            backgroundColor: Colors.tertiary,
+           // borderTopRightRadius: Size.small,
             justifyContent: 'center',
             alignItems: 'center',
           }}
           ><Text style={{
-            fontSize: Size.fs24
+            fontSize: Size.fs20,
+            color: Colors.white
           }}>{title}</Text></View>
         </Animated.View>
       </TouchableOpacity>
@@ -181,7 +197,7 @@ const HomeScreen = ({ navigation }) => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${env.IMAGE_URL_USER}/${avatar}`,
+              uri: avatar,
             }}
           />
         </View>
@@ -218,7 +234,7 @@ const HomeScreen = ({ navigation }) => {
             renderItem={({ item }) => (
               <BestCollectorItem
                 title={item[0].nickname}
-                avatar={item[0].imageName}
+                avatar={item[0].imageUrl}
                 money={item.totalPrice}
                 onPress={() => {handleItemPress(item)}}
               />

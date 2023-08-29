@@ -56,30 +56,18 @@ const CustomDrawer = (props) => {
            height: 65,
            backgroundColor: Colors.secondary,
            marginHorizontal: 8,
-           borderRadius: Size.xs
+           borderRadius: Size.xs,
+           overflow: 'hidden'
          }}>
-
-{
-              meError ? 
-       (
-         <Text>Oh no, there was an error</Text>
-       )
-       : meIsLoading ? 
-       ( 
-         <Text>Loading...</Text>
-       )
-        : meData ? (
          <Image
            source={{
-            uri: `${env.IMAGE_URL_USER}/${meData.imageName}`
+            uri: meData?.imageUrl
           }}
           style={{
             width: "100%",
             height: "100%"
           }}
-           /> 
-           ) : null
-      }
+           />
          </View>
          <View style={{
            marginLeft: 20

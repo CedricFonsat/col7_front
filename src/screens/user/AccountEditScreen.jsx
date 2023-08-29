@@ -6,21 +6,26 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Button,
   Image,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import Size from "../../constants/Size";
-import { useUserImageMutation } from "../../store/slices/authSlice";
+import { useMeQuery, useUserImageMutation, useUpdateUserMutation } from "../../store/slices/authSlice";
 import * as ImagePicker from "expo-image-picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useMeQuery } from "../../store/slices/authSlice";
+import Input from "../auth/components/Input";
+import Button from "../auth/components/Button";
+import env from "../../data/env";
+
 
 const AccountEditScreen = () => {
 
-  const { data: meData, refetch: meRefetch } = useMeQuery();
+  const { data, error, isLoading, refetch } = useMeQuery();
 
-  console.log();
+  const [updateUser] = useUpdateUserMutation();
+
+  console.log(data, error, isLoading, 'ppppppp');
+
 
   /***************************************************   Add PHOTO  */
 
@@ -102,6 +107,32 @@ const AccountEditScreen = () => {
 
   /*******************************************************  Add PHOTO */
 
+  const [username, setUsername] = useState(data.nickname ?? '');
+  const [email, setEmail] = useState(data.email ?? '');
+
+  const handleUpdate = () => {
+    const formData = {
+      id: data.id,
+      nickname: username,
+      email: email,
+    };
+
+
+    //navigation.navigate("Search");
+    
+    console.log(formData);
+
+    updateUser(formData).unwrap()
+    .then((res) => {
+       console.log('Good Job');
+       console.log(res);
+       refetch()
+    })
+    .catch(() =>
+        console.log('pas bon')
+    )
+  };
+
   return (
     <View style={styles.backgroundAccount}>
         <View style={styles.editBoxImg}>
@@ -111,30 +142,41 @@ const AccountEditScreen = () => {
               size={60}
               style={{ opacity: .4, position: 'absolute', zIndex: 1}}
             />
-      {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )}
+      {image ? (
+        <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
+      ): <Image source={{ uri: `${env.IMAGE_URL_USER}/${data.imageName}`}}
+      style={{ width: '100%', height: '100%' }}
+      />}
       </TouchableOpacity>
       </View>
-      <View style={styles.editInput}>
-        <TextInput
-          style={styles.editTextInput}
-          placeholder="Username"
-          placeholderTextColor="gray"
-          value="text9"
-        />
-      </View>
-      <View style={styles.editInput}>
-        <TextInput
-          style={styles.editTextInput}
-          placeholder="Email"
-          placeholderTextColor="gray"
-          value="hello@helo.dee"
-        />
-      </View>
-      <TouchableOpacity style={styles.editButton}>
-        <Text style={styles.editText}>Mettre a jour</Text>
-      </TouchableOpacity>
+
+      <Input
+       placeholder="Enter your username"
+       placeholderTextColor={Colors.white}
+       borderWidth={1}
+       borderColor={Colors.borderColor}
+       value={username}
+       onChangeText={setUsername}
+       autoCapitalize='none'
+       styleSheets={styles.input}
+      />
+
+      <Input
+       placeholder="Enter your email"
+       placeholderTextColor={Colors.white}
+       borderWidth={1}
+       borderColor={Colors.borderColor}
+       value={email}
+       onChangeText={setEmail}
+       autoCapitalize='none'
+       styleSheets={styles.input}
+      />
+
+       <Button
+        text="Update your profile"
+        backgroundColor={Colors.secondary}
+        onPress={handleUpdate}
+      />
     </View>
   );
 };
@@ -149,19 +191,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 150,
     paddingHorizontal: Size.default,
+    alignItems: 'center'
   },
-  editInput: {
-    width: width * 0.88,
-    height: 45,
-    borderRadius: Size.xs,
-    backgroundColor: Colors.borderColor,
-    justifyContent: "center",
-    paddingHorizontal: Size.default,
-    marginTop: Size.default,
+  input: {
+    marginBottom: Size.default,
   },
-  editTextInput: {
+  label: {
     fontSize: Size.fs16,
     color: Colors.white,
+    marginVertical: Size.small,
   },
   editButton: {
     width: width * 0.88,

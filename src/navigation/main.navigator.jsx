@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // init route
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,10 +15,45 @@ import AccountScreen from "../screens/user/AccountScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import AccountEditScreen from "../screens/user/AccountEditScreen";
 import SettingScreen from "../screens/user/SettingScreen";
+import arrow from "../../assets/icon/left.png";
+import Size from "../constants/Size";
+import Colors from "../constants/Colors";
+import CustomModal from "../screens/user/components/CustomModal";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
+
+const leftButton = ({ navigation }) => {
+  return (
+    <TouchableOpacity
+      style={{
+        width: 45,
+        height: 45,
+        borderRadius: Size.xl,
+        backgroundColor: Colors.primary,
+        justifyContent: "center",
+        alignItems: "center",
+        borderColor: Colors.borderColor,
+        borderWidth: 1,
+        overflow: "hidden",
+        zIndex: 1,
+        bottom: 1
+      }}
+      onPress={() => navigation.navigate("Account")}
+      activeOpacity={0.8}
+    >
+      <Image
+        style={{
+          width: 20,
+          height: 20,
+          tintColor: Colors.white,
+        }}
+        source={arrow}
+      />
+    </TouchableOpacity>
+  );
+};
 
 const tabBarOptions = {
   tabBarActiveTintColor: "#00A3FF",
@@ -101,7 +136,7 @@ const MainNavigator = ({ navigation }) => {
           tabBarLabel: "Search",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name="shopping-outline"
+              name="timer-outline"
               color={color}
               size={26}
             />
@@ -147,6 +182,14 @@ const AccountNavigator = ({ navigation }) => {
             backgroundColor: "#1A1A24",
             borderBottomColor: "rgba(0, 0, 0, 0)",
           },
+          headerLeft: () => (leftButton({navigation})),
+        }}/>
+<Stack.Screen name="Account" component={AccountScreen} options={{
+          title: "",
+          headerStyle: {
+            backgroundColor: "#1A1A24",
+            borderBottomColor: "rgba(0, 0, 0, 0)",
+          },
           headerLeft: () => (
             <TouchableOpacity onPress={navigation.openDrawer}>
               <MaterialCommunityIcons
@@ -157,9 +200,8 @@ const AccountNavigator = ({ navigation }) => {
               />
             </TouchableOpacity>
           ),
-        }}/>
-<Stack.Screen name="Account" component={AccountScreen} />
-     
+        }} />
+     <Stack.Screen name="CustomModal" component={CustomModal} options={{ presentation: 'modal' }} />
 
     </Stack.Navigator>
   );

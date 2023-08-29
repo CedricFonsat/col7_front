@@ -170,7 +170,7 @@ const MarketScreen = () => {
         {/* Background Image */}
         <Animated.Image
           source={{
-            uri: data.cover,
+            uri: data?.cover,
           }}
           resizeMode="contain"
           style={{
@@ -208,7 +208,7 @@ const MarketScreen = () => {
   return (
     <View style={styles.container}>
       <Animated.FlatList
-        data={data.data}
+        data={data?.data}
         renderItem={renderItems}
         keyExtractor={(item) => `${item.id}`}
         showsVerticalScrollIndicator={false}

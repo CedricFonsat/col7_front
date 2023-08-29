@@ -20,7 +20,6 @@ export default function RegisterScreen() {
     const formData = {
       nickname: username,
       email: email,
-      roles: [],
       password: password,
     };
 
@@ -28,14 +27,17 @@ export default function RegisterScreen() {
 
     register(formData).unwrap()
     .then((res) => {
-       console.log('Good Job');
-       console.log(res);
+       console.log('Good Job',res);
+
+       AsyncStorage.setItem("@token", res.token);
         setPassword();
         setEmail('');
         setUsername('');
+
+        navigation.navigate("SplashScreen");
     })
-    .catch(() =>
-        console.log('pas bon')
+    .catch((er) =>
+        console.log('pas bon',er)
     )
   };
 
