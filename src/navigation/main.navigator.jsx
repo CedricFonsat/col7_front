@@ -213,8 +213,8 @@ const AccountNavigator = ({ navigation }) => {
 
 const SettingNavigator = ({ navigation }) => {
   return (
-    <Tab.Navigator initialRouteName="Setting" screenOptions={tabBarOptions}>
-            <Tab.Screen
+    <Stack.Navigator initialRouteName="Setting" screenOptions={tabBarOptions}>
+            <Stack.Screen
         name="Setting"
         component={SettingScreen}
         options={{
@@ -235,7 +235,7 @@ const SettingNavigator = ({ navigation }) => {
           ),
         }}
       />
-    </Tab.Navigator>
+    </Stack.Navigator>
   );
 };
 

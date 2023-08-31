@@ -20,7 +20,8 @@ const SplashScreen = () => {
       AsyncStorage.getItem("@token").then((res) => {
         
         console.log("1", res);
-        navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
+      //  navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
+        navigation.replace('DrawerNavigator');
        // dispatch(addData('New Data'));
       });
 
