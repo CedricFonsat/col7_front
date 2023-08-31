@@ -7,6 +7,7 @@ import {
   TextInput,
   FlatList,
   Button,
+  TouchableOpacity
 } from "react-native";
 import Size from "../../constants/Size";
 import Colors from "../../constants/Colors";
@@ -14,7 +15,9 @@ import Card from "../../components/Card";
 import env from "../../data/env";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+
 import { useGetCardsQuery } from "../../store/slices/cardSlice";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SearchScreen = () => {
   const [filterdData, setfilterdData] = useState([]);
@@ -22,7 +25,7 @@ const SearchScreen = () => {
 
   const { data, error, isLoading } = useGetCardsQuery();
 
-  console.log(data);
+  console.log(data ,'ttt' );
 
   const headerShow = () => {
     return (
@@ -114,7 +117,13 @@ const SearchScreen = () => {
           value={searchTerm}
           onChangeText={(text) => searchFilter(text)}
         />
+     
        </View>
+       <ScrollView horizontal={true} contentContainerStyle={styles.categories}>
+          <TouchableOpacity style={styles.category}><Text style={styles.textCategory}>Moins cher</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.category}><Text style={styles.textCategory}>Plus cher</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.category}><Text style={styles.textCategory}>Autre</Text></TouchableOpacity>
+        </ScrollView>
         <FlatList
           data={filterdData}
           renderItem={renderItems}
@@ -162,4 +171,22 @@ const styles = StyleSheet.create({
     height: 20,
     // backgroundColor: Colors.white
   },
+  categories: {
+    height: 50,
+    width: width,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  category: {
+    width: 100,
+    height: 40,
+    backgroundColor: Colors.tertiary,
+    marginLeft: Size.small,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: Size.xs
+  },
+  textCategory: {
+    color: Colors.white
+  }
 });

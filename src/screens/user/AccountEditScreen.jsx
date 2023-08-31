@@ -20,11 +20,9 @@ import env from "../../data/env";
 
 const AccountEditScreen = () => {
 
-  const { data, error, isLoading, refetch } = useMeQuery();
+  const { data, error, isLoading, refetch: meRefetch } = useMeQuery();
 
   const [updateUser] = useUpdateUserMutation();
-
-  console.log(data, error, isLoading, 'ppppppp');
 
 
   /***************************************************   Add PHOTO  */
@@ -44,10 +42,11 @@ const AccountEditScreen = () => {
     .then((res) => {
      // console.log(res);
 
-      console.log('good job');
+      console.log('good job upload image');
+      meRefetch()
   
     })
-    .catch((err) => console.log("pas bon", err));
+    .catch((err) => console.log("pas bon img", err));
    };
 
   const [image, setImage] = useState(null);
@@ -96,7 +95,7 @@ const AccountEditScreen = () => {
       uriToBase64(uri)
         .then((base64Data) => {
            if (base64Data) {
-            uploadImage(base64Data,'test.jpg')
+            uploadImage(base64Data,'image.jpg')
            }
         })
         .catch((error) => {
@@ -124,12 +123,11 @@ const AccountEditScreen = () => {
 
     updateUser(formData).unwrap()
     .then((res) => {
-       console.log('Good Job');
-       console.log(res);
-       refetch()
+       console.log('Good Job', res, '%%%*');
+       meRefetch()
     })
-    .catch(() =>
-        console.log('pas bon')
+    .catch((er) =>
+        console.log('pas bon user',er)
     )
   };
 

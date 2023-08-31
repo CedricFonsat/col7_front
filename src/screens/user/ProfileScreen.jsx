@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -19,10 +19,17 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useMeQuery } from "../../store/slices/authSlice";
 import env from "../../data/env";
+import Button from "../auth/components/Button";
+import background from '../../../assets/illustration/login.png'
 
 const HEADER_HEIGHT = 300;
 
 const ProfileScreen = ({ navigation }) => {
+
+  const [tabActive, setTabActive] = useState(true);
+  const [tabActive2, setTabActive2] = useState(false);
+
+  const IS_AUTH = (1 == 0);
 
   const {
     data: collectionData,
@@ -30,14 +37,21 @@ const ProfileScreen = ({ navigation }) => {
     isLoading: collectionIsLoading,
   } = useGetCollectionCardsByIdQuery(6);
 
-  const { data: meData, error: meError, isLoading: meIsLoading, refetch: meRefetch } = useMeQuery();
+  const {
+    data: meData,
+    error: meError,
+    isLoading: meIsLoading,
+    refetch: meRefetch,
+  } = useMeQuery();
 
-  const floorPrice = meData.cards.reduce((total, item) => total + item.price, 0);
-  
-  console.log("Prix total :", floorPrice);
+  const floorPrice = meData?.cards.reduce(
+    (total, item) => total + item.price,
+    0
+  );
 
-  console.log(meData);
+  // console.log("Prix total :", floorPrice);
 
+  // console.log(meData);
 
   const renderHeaderBar = () => {
     return (
@@ -130,14 +144,12 @@ const ProfileScreen = ({ navigation }) => {
         style={{
           width: width,
           height: 100,
-          // backgroundColor: Colors.secondary,
           position: "absolute",
           justifyContent: "flex-end",
           paddingHorizontal: Size.default,
           zIndex: 999,
         }}
-      >
-      </View>
+      ></View>
     );
   };
 
@@ -184,14 +196,21 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const tabBar = () => {
+
     return (
       <View style={styles.tabBar}>
-        <View style={[styles.tabBarPanel, styles.tabBarPanelActive]}>
+        <TouchableOpacity style={[styles.tabBarPanel, tabActive ? styles.tabBarPanelActive : null]}  onPress={() => {
+              setTabActive(true)
+              setTabActive2(false)
+        }}>
           <Text style={styles.tabBarText}>Cards</Text>
-        </View>
-        <View style={styles.tabBarPanel}>
-          <Text style={styles.tabBarText}>Sell</Text>
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.tabBarPanel, tabActive2 ? styles.tabBarPanelActive : null]}  onPress={() => {
+              setTabActive2(true)
+              setTabActive(false)
+        }}>
+          <Text style={styles.tabBarText}>Favoris</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -204,7 +223,7 @@ const ProfileScreen = ({ navigation }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: `${env.IMAGE_URL_USER}/${meData.imageName}`,
+                uri: meData.imageUrl,
               }}
             />
           </View>
@@ -232,7 +251,7 @@ const ProfileScreen = ({ navigation }) => {
         {/* Background Image */}
         <Animated.Image
           source={{
-            uri: `${env.IMAGE_URL_USER}/${meData.imageName}`,
+            uri: meData.imageUrl,
           }}
           sharedTransitionTag="sharedTag"
           // resizeMode="contain"
@@ -259,40 +278,6 @@ const ProfileScreen = ({ navigation }) => {
         ></Animated.Image>
 
         {headerShowInfos()}
-
-        {/* <BlurView
-          intensity={70}
-          tint="white"
-          style={{
-            position: "absolute",
-            width: width * 0.9,
-            height: 60,
-            borderRadius: Size.xs,
-            overflow: "hidden",
-            //  backgroundColor: Colors.white,
-            justifyContent: "center",
-            alignItems: "center",
-            bottom: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: Size.fs24,
-              fontWeight: Size.w600,
-              color: Colors.white,
-            }}
-          >
-            {collectionError ? (
-              <Text>Oh no, there was an error</Text>
-            ) : collectionIsLoading ? (
-              <Text>Loading...</Text>
-            ) : collectionData ? (
-              collectionData.name
-            ) : (
-              <Text>Null</Text>
-            )}
-          </Text>
-        </BlurView> */}
       </View>
     );
   };
@@ -300,51 +285,59 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
-        <View style={styles.container}>
-          {meError ? (
-            <Text>Oh no, there was an error</Text>
-          ) : meIsLoading ? (
-            <Text>Loading...</Text>
-          ) : meData ? (
-            <Animated.FlatList
-              data={meData.cards}
-              renderItem={renderItems}
-              numColumns={2}
-              keyExtractor={(item) => `${item.id}`}
-              showsVerticalScrollIndicator={false}
-              ListHeaderComponent={
-                <View>
-                  {/* Header */}
-                  {/* Probable emplacement de SharedElement */}
-                  {renderCollectionHeader()}
-                
+        { meData ? (
+          <View style={styles.container}>
+            {meError ? (
+              <Text>Oh no, there was an error</Text>
+            ) : meIsLoading ? (
+              <Text>Loading...</Text>
+            ) : meData ? (
+              <Animated.FlatList
+                data={tabActive ? meData.cards :meData.cards_favoris[0].cards}
+                renderItem={renderItems}
+                numColumns={2}
+                keyExtractor={(item) => `${item.id}`}
+                showsVerticalScrollIndicator={false}
+                ListHeaderComponent={
+                  <View>
+                    {/* Header */}
+                    {/* Probable emplacement de SharedElement */}
+                    {renderCollectionHeader()}
 
-                  {/* Title */}
-                  <View
-                    style={{
-                      height: 150,
-                      width: width,
-                      alignItems: "center",
-                    }}
-                  >
-                    {midInfos()}
-                  {tabBar()}
+                    {/* Title */}
+                    <View
+                      style={{
+                        height: 150,
+                        width: width,
+                        alignItems: "center",
+                      }}
+                    >
+                      {midInfos()}
+                      {tabBar()}
+                    </View>
                   </View>
-                </View>
-              }
-              scrollEventThrottle={16}
-              onScroll={Animated.event(
-                [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                { useNativeDriver: true }
-              )}
-            />
-          ) : null}
+                }
+                scrollEventThrottle={16}
+                onScroll={Animated.event(
+                  [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                  { useNativeDriver: true }
+                )}
+              />
+            ) : null}
 
-          {renderHeader()}
+            {renderHeader()}
 
-          {/* Header Bar */}
-          {renderHeaderBar()}
-        </View>
+            {/* Header Bar */}
+            {renderHeaderBar()}
+          </View>
+        ) : (
+          <View style={[styles.container, stylesBis.container]}>
+            <View style={stylesBis.headShow}>
+              <Image style={stylesBis.image} source={background} />
+            </View> 
+            <Button text='Sign in' backgroundColor={Colors.secondary} onPress={() => navigation.navigate('LoginScreen')} />
+          </View>
+        )}
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
@@ -353,6 +346,25 @@ const ProfileScreen = ({ navigation }) => {
 export default ProfileScreen;
 
 const { width, height } = Dimensions.get("window");
+
+const stylesBis = StyleSheet.create({
+  container: {
+    alignItems: 'center'
+  },
+  headShow: {
+    width: width,
+    height: height * 0.4,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginBottom: Size.xl
+  },
+  image: {
+    width: '150%',
+    height: '100%',
+    position: 'absolute',
+  }
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -491,18 +503,19 @@ const styles = StyleSheet.create({
     height: height / 3.5,
   },
   tabBar: {
-    width: width * 0.9,
+    width: width * 0.96,
     height: 50,
     backgroundColor: Colors.tertiary,
     marginTop: 10,
     borderRadius: Size.xs,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    paddingHorizontal: Size.xs,
     alignItems: "center",
   },
   tabBarPanel: {
-    width: width * 0.41,
-    height: 30,
+    width: width * 0.42,
+    height: 40,
     borderRadius: Size.xs,
     justifyContent: "center",
     alignItems: "center",

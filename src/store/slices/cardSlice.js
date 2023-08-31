@@ -18,7 +18,7 @@ export const cardApi = createApi({
   }),
   endpoints: (builder) => ({
     getCards: builder.query({
-      query: () => "/cards/",
+      query: () => "/cards",
       method: "GET",
     }),
     buyCardById: builder.mutation({

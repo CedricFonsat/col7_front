@@ -11,12 +11,33 @@ import Colors from "../../constants/Colors";
 import Size from "../../constants/Size";
 import { useMeQuery } from "../../store/slices/authSlice";
 import Button from "../auth/components/Button";
-import { useDeleteAccountQuery } from "../../store/slices/authSlice";
+import { useDeleteUserMutation } from "../../store/slices/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const AccountEditScreen = ({navigation}) => {
 
   const { data } = useMeQuery();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleDeleteAccount = async() => {
+    const formData = {
+      id: data.id
+    };
+
+    console.log(formData);
+
+   await deleteUser(formData).unwrap()
+    .then((res) => {
+       console.log('Good Job delete your account', res);
+
+       AsyncStorage.removeItem("@token");
+       navigation.replace("SplashScreen");
+    })
+    .catch((er) =>
+        console.log('pas bon not delete',er)
+    )
+  };
 
   const createTwoButtonAlert = () =>
   Alert.alert('Delete your account', 'Are you sure you want to delete your account', [
@@ -25,10 +46,7 @@ const AccountEditScreen = ({navigation}) => {
       onPress: () => console.log('Cancel Pressed'),
       style: 'cancel',
     },
-    {text: 'OK', onPress: () => {
-      
-      useGetCollectionCardsByIdQuery(data.id);
-      console.log('OK Pressed', data.id)}},
+    {text: 'OK', onPress: () => {handleDeleteAccount()}},
   ]);
 
 
@@ -45,7 +63,6 @@ const AccountEditScreen = ({navigation}) => {
        <TouchableOpacity style={styles.deleteButton} 
       // onPress={() => navigation.navigate("CustomModal")}
        onPress={() => createTwoButtonAlert()}
-       
        >
          <Text style={[styles.label, {color: Colors.red}]}>Delete your account</Text>
        </TouchableOpacity>

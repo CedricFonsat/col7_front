@@ -7,8 +7,9 @@ import Input from "./components/Input";
 import Button from "./components/Button";
 import { useState } from "react";
 import { useRegisterMutation } from "../../store/slices/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function RegisterScreen() {
+export default function RegisterScreen({navigation}) {
 
   const [register] = useRegisterMutation();
 

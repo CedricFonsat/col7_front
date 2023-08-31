@@ -71,25 +71,25 @@ const CollectionDetail = ({ navigation, route }) => {
     meRefetch();
   };
 
-  const handleCardFavorite = async (id) => {
-    const favoriteCardById = {
-      id: data.id,
-      cardId: id,
-    };
+  // const handleCardFavorite = async (id) => {
+  //   const favoriteCardById = {
+  //     id: data.id,
+  //     cardId: id,
+  //   };
 
-    await favoriteCard(favoriteCardById)
-      .then((res) => {
-        console.log(res, "**** carte ajoute en favoris ****");
-      })
-      .catch(() => console.log("pas bon"));
+  //   await favoriteCard(favoriteCardById)
+  //     .then((res) => {
+  //       console.log(res, "**** carte ajoute en favoris ****");
+  //     })
+  //     .catch(() => console.log("pas bon"));
 
-    collectionRefetch();
-    meRefetch();
-  };
+  //   collectionRefetch();
+  //   meRefetch();
+  // };
 
-  const isCardInFavorites = (cardId) => {
-    return data.card_favoris.some((card) => card.id === cardId);
-  };
+  // const isCardInFavorites = (cardId) => {
+  //   return data.card_favoris.some((card) => card.id === cardId);
+  // };
 
   const leftButton = ({ navigation }) => {
     return (
@@ -238,7 +238,7 @@ const CollectionDetail = ({ navigation, route }) => {
               handlePresentModalPress(item);
             }}
             bid="flex"
-            favorite={isCardInFavorites(item.id)}
+           // favorite={isCardInFavorites(item.id)}
             image={{
               uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
             }}
@@ -252,14 +252,15 @@ const CollectionDetail = ({ navigation, route }) => {
             <View style={styles.contentContainer}>
               <TouchableOpacity
                 style={styles.bottomSheetFavoris}
-                onPress={async() => {
-                  console.log(isCardInFavorites(selectedCard.id))
-                 await handleCardFavorite(selectedCard?.id);
-                }}
+                // onPress={async() => {
+                // //  console.log(isCardInFavorites(selectedCard.id))
+                //  await handleCardFavorite(selectedCard?.id);
+                // }}
               >
                 <Image
                   source={
-                    isCardInFavorites(selectedCard?.id) ? addFavoris : favoris
+                  //  isCardInFavorites(selectedCard?.id) ? addFavoris : favoris
+                     addFavoris
                   }
                   style={styles.iconBottomSheet}
                 />

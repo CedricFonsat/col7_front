@@ -17,12 +17,11 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Animated from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGetCollectionCardsQuery } from "../../store/slices/collectionCardSlice";
-import { useUsersListHomeQuery, useConnexionMutation, useMeQuery } from "../../store/slices/authSlice";
+import { useUsersListHomeQuery, useMeQuery } from "../../store/slices/authSlice";
 import env from "../../data/env";
 
 const HomeScreen = ({ navigation }) => {
 
-  const [connexion] = useConnexionMutation();
   const { data: meData } = useMeQuery();
 
 
@@ -35,17 +34,7 @@ const HomeScreen = ({ navigation }) => {
 
 // })
 
-  console.log(meData,'%%%%%%%%%%');
-
-  const handleLogout = async () => {
-    try {
-      console.log("boss twap");
-      await AsyncStorage.removeItem("@token");
-      navigation.replace("SplashScreen");
-    } catch (error) {
-      // Handle error if needed
-    }
-  };
+ // console.log(meData,'%%%%%%%%%%');
 
   const {
     data: collectionData,
@@ -53,9 +42,9 @@ const HomeScreen = ({ navigation }) => {
     isLoading: collectionIsLoading,
   } = useGetCollectionCardsQuery();
 
-  if (collectionData) {
-    console.log(`${env.IMAGE_URL_USER}/${collectionData[0].imageName}`);
-  }
+  // if (collectionData) {
+  //   console.log(`${env.IMAGE_URL_USER}/${collectionData[0].imageName}`);
+  // }
 
   const {
     data: usersData,
@@ -64,13 +53,13 @@ const HomeScreen = ({ navigation }) => {
   } = useUsersListHomeQuery();
 
   if (usersError) {
-    console.log("jjjjj: EROOR");
+    console.log("E------");
   } else if (usersIsLoading) {
-    console.log("loading");
+    console.log("L---------");
   } else if (usersData) {
     console.log(usersData[0]);
   } else {
-    console.log("null");
+    console.log("D---------");
   }
 
   const headerShow = () => {

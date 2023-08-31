@@ -19,10 +19,13 @@ import arrow from "../../assets/icon/left.png";
 import Size from "../constants/Size";
 import Colors from "../constants/Colors";
 import CustomModal from "../screens/user/components/CustomModal";
+import { useMeQuery } from "../store/slices/authSlice";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
+
+const IS_AUTH = (1 == 0);
 
 const leftButton = ({ navigation }) => {
   return (
@@ -73,6 +76,7 @@ const tabBarOptions = {
 };
 
 const MainNavigator = ({ navigation }) => {
+
   return (
     <Tab.Navigator initialRouteName="Home" screenOptions={tabBarOptions}>
       <Tab.Screen
@@ -133,7 +137,7 @@ const MainNavigator = ({ navigation }) => {
         name="Market"
         component={MarketScreen}
         options={{
-          tabBarLabel: "Search",
+          tabBarLabel: "Coming Soon",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="timer-outline"
@@ -236,6 +240,10 @@ const SettingNavigator = ({ navigation }) => {
 };
 
 const DrawerNavigator = () => {
+  
+  const { data: isToken } = useMeQuery()
+
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -263,7 +271,8 @@ const DrawerNavigator = () => {
           drawerLabel: "Home",
         }}
       />
-            <Drawer.Screen
+
+  <Drawer.Screen
         name="AccountNavigator"
         component={AccountNavigator}
         options={{
@@ -277,6 +286,7 @@ const DrawerNavigator = () => {
           drawerLabel: "Account",
         }}
       />
+         
                   <Drawer.Screen
         name="SettingScreen"
         component={SettingNavigator}

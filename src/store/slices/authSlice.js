@@ -30,19 +30,25 @@ export const authApi = createApi({
         body,
       }),
     }),
-    connexion: builder.mutation({
-      query: (body) => ({
-        url: "/connexion_user",
-        method: "POST",
-        body,
-      }),
-    }),
     updateUser: builder.mutation({
       query: (rest) => {
         const { id } = rest;
         return {
           url: `/users/${id}`,
           method: 'PUT',
+          body: rest,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+    }),
+    deleteUser: builder.mutation({
+      query: (rest) => {
+        const { id } = rest;
+        return {
+          url: `/users/${id}/delete`,
+          method: 'POST',
           body: rest,
           headers: {
             'Content-Type': 'application/json',
@@ -63,15 +69,6 @@ export const authApi = createApi({
         method: "Get",
       }),
     }),
-    deleteAccount: builder.query({
-      query: (id) => ({ // Accept id as a parameter
-        url: `/api/users/${id}`, // Customize the URL with the id
-        method: "Delete",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }),
-      }),
     usersListHome: builder.query({
       query: () => ({
         url: "/home",
@@ -102,6 +99,8 @@ export const {
   useUsersListHomeQuery,
   useUserImageMutation,
   useFavoriteCardMutation,
-  useDeleteAccountQuery,
-  useConnexionMutation
+  useConnexionMutation,
+
+  useDeleteUserMutation
+  
 } = authApi;

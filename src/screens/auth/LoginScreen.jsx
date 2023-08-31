@@ -15,36 +15,6 @@ import * as ImagePicker from 'expo-image-picker';
 
 export default function LoginScreen({navigation}) {
   //const count = useSelector((state) => state.counter.value);
-
-  const [image, setImage] = useState(null);
-
-  let tab = [];
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    tab = result.assets
-
-    const results = tab.map(item => {
-      const { fileSize, fileName } = item;
-      return { fileSize, fileName };
-    });
-    
-    console.log(results);
-    console.log(tab);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
- 
   
   const [login] = useLoginMutation();
   // const { data: queryData, error} = useMeQuery();
@@ -68,7 +38,7 @@ export default function LoginScreen({navigation}) {
       .unwrap()
       .then((res) => {
       //  console.log("Good Job");
-        console.log(res);
+      //  console.log(res);
       //  setPassword();
       //  setUsername("");
         AsyncStorage.setItem("@token", res.token);
@@ -110,7 +80,7 @@ export default function LoginScreen({navigation}) {
       <Input
         placeholder="Enter your password"
         placeholderTextColor={Colors.white}
-       // secureTextEntry={true}
+        secureTextEntry={true}
         borderWith={1}
         borderColor={Colors.borderColor}
         value={password}
@@ -131,12 +101,6 @@ export default function LoginScreen({navigation}) {
           <Link style={styles.link} to={{ screen: "RegisterScreen" }}> Sign Up </Link>now!
         </Text>
       </View>
-      <Button style={{
-        width: 300,
-        height: 40,
-        backgroundColor: Colors.primary
-      }} title="Pick an image from camera roll" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
     </View>
   );
 }

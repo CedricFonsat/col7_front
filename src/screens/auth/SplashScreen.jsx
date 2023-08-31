@@ -2,11 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+import { useMeQuery } from '../../store/slices/authSlice';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
-
-  const [token, setToken] = useState('');
+  const user = useSelector(state => state.user.user);
+  const dispatch = useDispatch();
+  const { data } = useMeQuery();
 
 
   useEffect(() => {
@@ -15,10 +18,14 @@ const SplashScreen = () => {
         
         console.log("1", res);
         navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
+       // dispatch(addData('New Data'));
       });
+
+    //  console.log(await data,'*******************************', user);
     
-   
   }, [navigation]);
+
+
 
   // useEffect(() => {
    
@@ -53,6 +60,7 @@ const SplashScreen = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
