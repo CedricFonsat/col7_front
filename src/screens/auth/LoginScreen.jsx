@@ -8,6 +8,7 @@ import Size from "../../constants/Size";
 import React, { useState, useEffect } from "react";
 import { useLoginMutation } from "../../store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Fontisto from "react-native-vector-icons/Fontisto";
 //import { useMeQuery } from "../../store/slices/authSlice";
 
 import * as ImagePicker from 'expo-image-picker';
@@ -57,18 +58,28 @@ export default function LoginScreen({navigation}) {
 //ced97x@gmail.com  
 //contact@collect7.fr
 
+const googleLogo = () => {
+  return (
+    <>
+    <Fontisto name="star" size={30} color="gold" />
+    <Text>Google</Text>
+    </>
+  )
+}
+
   return (
     <View style={styles.container}>
       <Button
+        icon={<Fontisto name="google" size={20} color="white" style={{marginRight: Size.small}} />}
         text="Google"
         backgroundColor={Colors.tertiary}
         borderWith={1}
         borderColor={Colors.borderColor}
       />
       <View style={styles.line}></View>
-      <Text style={styles.label}>Username</Text>
+      <Text style={styles.label}>Email</Text>
       <Input
-       placeholder="my_ri_dick"
+       placeholder="Enter your email"
        placeholderTextColor={Colors.white}
        borderWidth={1}
        borderColor={Colors.borderColor}

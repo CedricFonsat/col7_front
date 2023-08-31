@@ -235,6 +235,23 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
+  const BestCollection = () => {
+    return (
+      <TouchableOpacity style={styles.bestCollection} 
+     // onPress={onPress}
+      >
+          <Image
+            style={styles.avatar}
+            source={{
+              uri: 'https://pbs.twimg.com/media/FR1xxoIWUAQiorM.jpg',
+            }}
+          />
+      </TouchableOpacity>
+    );
+  };
+
+
+
   return (
     <SafeAreaView style={styles.backgroundStyle}>
       <StatusBar />
@@ -242,6 +259,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.container}>
           {headerShow()}
           {SearchBar()}
+          {BestCollection()}
           {CollectionList()}
           <View style={styles.bestCollectorBlockTitle}>
             <Text style={styles.bestCollectorTitle}>Best collector</Text>
@@ -319,6 +337,13 @@ const styles = StyleSheet.create({
     color: Colors.white,
     // fontWeight: Size.w600,
     zIndex: 2,
+  },
+  bestCollection: {
+    width: width * 0.9,
+    height: 150,
+    marginVertical: Size.default,
+    borderRadius: Size.small,
+    overflow: 'hidden'
   },
   collectionList: {
     width: width * 0.9,

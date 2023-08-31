@@ -1,9 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useMeQuery } from '../../store/slices/authSlice';
+import logo from '../../../assets/logo/logo.png';
+import Colors from '../../constants/Colors';
+import Size from '../../constants/Size';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -56,7 +59,9 @@ const SplashScreen = () => {
 
   return (
     <View style={styles.container} >
-      <View style={styles.loading}></View>
+      <View style={styles.loading}>
+        <Image source={logo} style={styles.image} />
+      </View>
     </View>
   );
 };
@@ -67,12 +72,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'green'
+    backgroundColor: Colors.primary
   },
   loading:{
-    width: 200,
-    height: 200,
-    backgroundColor: 'yellow'
+    width: Size.xxl,
+    height: Size.xxl,
+  },
+  image: {
+    width: '100%',
+    height: '100%'
   }
 });
 

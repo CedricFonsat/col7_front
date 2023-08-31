@@ -7,7 +7,7 @@ import {
   TextInput,
   FlatList,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Size from "../../constants/Size";
 import Colors from "../../constants/Colors";
@@ -15,17 +15,19 @@ import Card from "../../components/Card";
 import env from "../../data/env";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-
 import { useGetCardsQuery } from "../../store/slices/cardSlice";
 import { ScrollView } from "react-native-gesture-handler";
 
 const SearchScreen = () => {
   const [filterdData, setfilterdData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [moinCher, setMoinCher] = useState(false);
+  const [plusCher, setPlusCher] = useState(false);
+  const [autre, setAutre] = useState(false);
 
   const { data, error, isLoading } = useGetCardsQuery();
 
-  console.log(data ,'ttt' );
+  console.log(data, "ttt");
 
   const headerShow = () => {
     return (
@@ -33,7 +35,7 @@ const SearchScreen = () => {
         style={{
           backgroundColor: Colors.tertiary,
           width: width,
-          height: height / 5.5,
+          height: height * 0.2,
           position: "relative",
           alignItems: "center",
         }}
@@ -90,43 +92,106 @@ const SearchScreen = () => {
     }
   };
 
+  const renderNotFound = () => {
+    return (
+      <View style={{
+        width: width,
+        height: 50
+      }}>
+        <Text style={{
+          color: Colors.white,
+          fontSize: Size.fs24
+        }}>no result found.</Text>
+      </View>
+    )
+  }
+
   const SearchBar = () => {
     return (
       <View style={{ flex: 1, width: width }}>
-       <View style={{position: 'relative', justifyContent: 'center'}}>
-       <MaterialCommunityIcons
-                name="magnify"
-                color="white"
-                size={26}
-                style={{ marginLeft: Size.default, position: 'absolute', zIndex: 1 }}
-              />
-       <TextInput
-          style={{
-            height: 50,
-            margin: Size.small,
-            paddingVertical: Size.small,
-            paddingLeft: Size.large,
-            paddingRight: Size.small,
-            backgroundColor: Colors.tertiary,
-            borderRadius: Size.xs,
-            fontSize: Size.fs16,
-            color: Colors.white
+        <View style={{ position: "relative", justifyContent: "center" }}>
+          <MaterialCommunityIcons
+            name="magnify"
+            color="white"
+            size={26}
+            style={{
+              marginLeft: Size.default,
+              position: "absolute",
+              zIndex: 1,
+            }}
+          />
+          <TextInput
+            style={{
+              height: 50,
+              margin: Size.small,
+              paddingVertical: Size.small,
+              paddingLeft: Size.large,
+              paddingRight: Size.small,
+              backgroundColor: Colors.tertiary,
+              borderRadius: Size.xs,
+              fontSize: Size.fs16,
+              color: Colors.white,
+            }}
+            placeholder="Search cards"
+            placeholderTextColor={Colors.white}
+            value={searchTerm}
+            onChangeText={(text) => searchFilter(text)}
+          />
+        </View>
+        <ScrollView horizontal={true} contentContainerStyle={styles.categories}>
+          <TouchableOpacity style={[styles.category, moinCher ? styles.activeChoiceFiler : null]}
+          onPress={() => {
+            if (moinCher) {
+              setMoinCher(false)
+            }else{
+              setMoinCher(true)
+            }
+          }}>
+            <MaterialCommunityIcons
+              name="align-vertical-bottom"
+              color={Colors.white}
+              size={16}
+              style={styles.iconCategory}
+            />
+            <Text style={styles.textCategory}>Moins cher</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.category, plusCher ? styles.activeChoiceFiler : null]}
+          onPress={() => {
+            if (plusCher) {
+              setPlusCher(false)
+            }else{
+              setPlusCher(true)
+            }
+          }}>
+          <MaterialCommunityIcons
+            name="align-vertical-top"
+            color={Colors.white}
+            size={16}
+            style={styles.iconCategory}
+          />
+            <Text style={styles.textCategory}>Plus cher</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.category, autre ? styles.activeChoiceFiler : null]}
+          onPress={() => {
+            if (autre) {
+              setAutre(false)
+            }else{
+              setAutre(true)
+            }
           }}
-          placeholder="Search cards"
-          placeholderTextColor={Colors.white}
-          value={searchTerm}
-          onChangeText={(text) => searchFilter(text)}
-        />
-     
-       </View>
-       <ScrollView horizontal={true} contentContainerStyle={styles.categories}>
-          <TouchableOpacity style={styles.category}><Text style={styles.textCategory}>Moins cher</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.category}><Text style={styles.textCategory}>Plus cher</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.category}><Text style={styles.textCategory}>Autre</Text></TouchableOpacity>
+          >
+          <MaterialCommunityIcons
+            name="broadcast"
+            color={Colors.white}
+            size={16}
+            style={styles.iconCategory}
+          />
+            <Text style={styles.textCategory}>Autre</Text>
+          </TouchableOpacity>
         </ScrollView>
         <FlatList
           data={filterdData}
-          renderItem={renderItems}
+          renderItem={renderItems ?? renderNotFound}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
         />
@@ -174,19 +239,26 @@ const styles = StyleSheet.create({
   categories: {
     height: 50,
     width: width,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   category: {
-    width: 100,
+    width: 120,
     height: 40,
     backgroundColor: Colors.tertiary,
     marginLeft: Size.small,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: Size.xs
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: Size.xs,
+    flexDirection: "row",
   },
   textCategory: {
-    color: Colors.white
+    color: Colors.white,
+  },
+  iconCategory: {
+    marginRight: Size.xs
+  },
+  activeChoiceFiler: {
+    backgroundColor: Colors.secondary
   }
 });
