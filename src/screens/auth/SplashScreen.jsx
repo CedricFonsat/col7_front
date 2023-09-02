@@ -21,7 +21,7 @@ const SplashScreen = () => {
         
         console.log("1", res);
       //  navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
-        navigation.replace('DrawerNavigator');
+        navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
        // dispatch(addData('New Data'));
       });
 

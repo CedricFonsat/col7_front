@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,10 @@ import env from "../../../data/env";
 const HEADER_HEIGHT = 300;
 
 const UserDetailScreen = ({ navigation, route }) => {
+
+
+  const [tabActive, setTabActive] = useState(true);
+  const [tabActive2, setTabActive2] = useState(false);
 
     const { itemId } = route.params;
     const user = itemId[0];
@@ -189,15 +193,21 @@ const UserDetailScreen = ({ navigation, route }) => {
 
   const tabBar = () => {
     return (
-      <View style={styles.tabBar}>
-        <View style={[styles.tabBarPanel, styles.tabBarPanelActive]}>
-          <Text style={styles.tabBarText}>Cards</Text>
+        <View style={styles.tabBar}>
+          <TouchableOpacity style={[styles.tabBarPanel, tabActive ? styles.tabBarPanelActive : null]}  onPress={() => {
+                setTabActive(true)
+                setTabActive2(false)
+          }}>
+            <Text style={styles.tabBarText}>Cards</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.tabBarPanel, tabActive2 ? styles.tabBarPanelActive : null]}  onPress={() => {
+                setTabActive2(true)
+                setTabActive(false)
+          }}>
+            <Text style={styles.tabBarText}>Favoris</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.tabBarPanel}>
-          <Text style={styles.tabBarText}>Sell</Text>
-        </View>
-      </View>
-    );
+      );
   };
 
   const headerShowInfos = () => {
@@ -272,7 +282,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       <BottomSheetModalProvider>
         <View style={styles.container}>
             <Animated.FlatList
-              data={user.cards}
+              data={tabActive ? user?.cards : user.cards_favoris[0]?.cards}
               renderItem={renderItems}
               numColumns={2}
               keyExtractor={(item) => `${item.id}`}
@@ -382,7 +392,7 @@ const styles = StyleSheet.create({
     color: Colors.gray,
   },
   midInfos: {
-    width: width * 0.9,
+    width: width * 0.96,
     height: 60,
     backgroundColor: Colors.tertiary,
     marginTop: 20,
@@ -455,18 +465,19 @@ const styles = StyleSheet.create({
     height: height / 3.5,
   },
   tabBar: {
-    width: width * 0.9,
+    width: width * 0.96,
     height: 50,
     backgroundColor: Colors.tertiary,
     marginTop: 10,
     borderRadius: Size.xs,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    paddingHorizontal: Size.xs,
     alignItems: "center",
   },
   tabBarPanel: {
-    width: width * 0.41,
-    height: 30,
+    width: width * 0.42,
+    height: 40,
     borderRadius: Size.xs,
     justifyContent: "center",
     alignItems: "center",

@@ -16,7 +16,7 @@ import Colors from "../../constants/Colors";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Animated from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useGetCollectionCardsQuery } from "../../store/slices/collectionCardSlice";
+import { useGetCollectionCardsQuery, useGetHomeQuery } from "../../store/slices/collectionCardSlice";
 import { useUsersListHomeQuery, useMeQuery } from "../../store/slices/authSlice";
 import env from "../../data/env";
 
@@ -36,11 +36,23 @@ const HomeScreen = ({ navigation }) => {
 
  // console.log(meData,'%%%%%%%%%%');
 
+
+ const { data: homeData } = useGetHomeQuery();
+
+
+ console.log(homeData?.users, '..*****');
+ 
+
   const {
     data: collectionData,
     error: collectionError,
     isLoading: collectionIsLoading,
   } = useGetCollectionCardsQuery();
+
+
+  //const { data: homeData, error: homeError } = useCustomHomeQuery();
+
+
 
   // if (collectionData) {
   //   console.log(`${env.IMAGE_URL_USER}/${collectionData[0].imageName}`);
@@ -111,7 +123,7 @@ const HomeScreen = ({ navigation }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: `${env.IMAGE_URL_COLLECTION}/${image}`,
+                uri: image,
               }}
             />
           </View>
@@ -163,7 +175,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={collectionData}
+            data={homeData.collection}
             renderItem={({ item }) => (
               <CollectionItem
                 title={item.name}
@@ -181,7 +193,7 @@ const HomeScreen = ({ navigation }) => {
 
   const BestCollectorItem = ({ title, money, avatar, onPress }) => {
     return (
-      <TouchableOpacity style={styles.bestCollectorItem} onPress={onPress}>
+      <TouchableOpacity style={styles.bestCollectorItem} onPress={onPress} activeOpacity={.8}>
         <View style={styles.bestCollectorItemAvatar}>
           <Image
             style={styles.avatar}
@@ -216,7 +228,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             horizontal
             showsVerticalScrollIndicator={false}
-            data={usersData}
+            data={homeData?.users}
             contentContainerStyle={{
               flexDirection: "column",
             }}
@@ -239,6 +251,7 @@ const HomeScreen = ({ navigation }) => {
     return (
       <TouchableOpacity style={styles.bestCollection} 
      // onPress={onPress}
+      activeOpacity={1}
       >
           <Image
             style={styles.avatar}
@@ -255,7 +268,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.backgroundStyle}>
       <StatusBar />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <ScrollView contentInsetAdjustmentBehavior="automatic" showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           {headerShow()}
           {SearchBar()}
@@ -323,10 +336,10 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     padding: 20,
     marginVertical: 8,
-    marginHorizontal: 16,
+    marginRight: 20,
     height: 180,
     width: width * 0.7,
-    marginTop: 60,
+  //  marginTop: 60,
     justifyContent: "flex-end",
     position: 'relative',
     overflow: 'hidden',
@@ -340,7 +353,7 @@ const styles = StyleSheet.create({
   },
   bestCollection: {
     width: width * 0.9,
-    height: 150,
+    height: 180,
     marginVertical: Size.default,
     borderRadius: Size.small,
     overflow: 'hidden'

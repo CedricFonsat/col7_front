@@ -30,7 +30,7 @@ import favoris from "../../../../assets/icon/favoris.png";
 import addFavoris from "../../../../assets/icon/add-favoris.png";
 
 import env from "../../../data/env";
-import RenderHtml from 'react-native-render-html';
+import RenderHtml from "react-native-render-html";
 
 const HEADER_HEIGHT = 300;
 
@@ -224,10 +224,7 @@ const CollectionDetail = ({ navigation, route }) => {
         });
       }
 
-      
-
       return (
-      
         <>
           <Card
             key={item.id}
@@ -238,9 +235,9 @@ const CollectionDetail = ({ navigation, route }) => {
               handlePresentModalPress(item);
             }}
             bid="flex"
-           // favorite={isCardInFavorites(item.id)}
+            // favorite={isCardInFavorites(item.id)}
             image={{
-              uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
+              uri: item.imageName,
             }}
           />
           <BottomSheetModal
@@ -259,8 +256,8 @@ const CollectionDetail = ({ navigation, route }) => {
               >
                 <Image
                   source={
-                  //  isCardInFavorites(selectedCard?.id) ? addFavoris : favoris
-                     addFavoris
+                    //  isCardInFavorites(selectedCard?.id) ? addFavoris : favoris
+                    addFavoris
                   }
                   style={styles.iconBottomSheet}
                 />
@@ -296,8 +293,9 @@ const CollectionDetail = ({ navigation, route }) => {
                     Description
                   </Text>
                   <Text style={styles.textMediumBottomSheet}>
-                    Meka from the MekaVerse - A collection of 8,888 unique
-                    generative NFTs from an other universe.
+                    {/* Meka from the MekaVerse - A collection of 8,888 unique
+                    generative NFTs from an other universe. */}
+                    {collectionData?.description}
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -319,15 +317,15 @@ const CollectionDetail = ({ navigation, route }) => {
   };
 
   const source = {
-    html: collectionData?.description
+    html: collectionData?.description,
   };
 
   const tagsStyles = {
     div: {
-      whiteSpace: 'normal',
-      color: 'white',
-      fontSize: 16
-    }
+      whiteSpace: "normal",
+      color: "white",
+      fontSize: 16,
+    },
   };
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -439,28 +437,32 @@ const CollectionDetail = ({ navigation, route }) => {
               ListHeaderComponent={
                 <View>
                   {renderCollectionHeader()}
-                 <View style={styles.renderCollectionDescription}>
-                     <View style={styles.renderDescription}>
-                     {collectionError ? (
-              <Text style={styles.renderText}>Oh no, there was an error</Text>
-            ) : collectionIsLoading ? (
-              <Text style={styles.renderText}>Loading...</Text>
-            ) : collectionData ? (
-              <>
-              <RenderHtml
-      contentWidth={width}
-      source={source}
-      tagsStyles={tagsStyles}
-    />
-              <View style={styles.renderCategory}>
-                <Text style={styles.renderCategoryText}>{collectionData.category.name}</Text>
-              </View>
-              </>
-            ) : (
-              <Text style={styles.renderText}>Null</Text>
-            )}
-                     </View>
-                 </View>
+                  <View style={styles.renderCollectionDescription}>
+                    <View style={styles.renderDescription}>
+                      {collectionError ? (
+                        <Text style={styles.renderText}>
+                          Oh no, there was an error
+                        </Text>
+                      ) : collectionIsLoading ? (
+                        <Text style={styles.renderText}>Loading...</Text>
+                      ) : collectionData ? (
+                        <>
+                          <RenderHtml
+                            contentWidth={width}
+                            source={source}
+                            tagsStyles={tagsStyles}
+                          />
+                          <View style={styles.renderCategory}>
+                            <Text style={styles.renderCategoryText}>
+                              {collectionData.category.name}
+                            </Text>
+                          </View>
+                        </>
+                      ) : (
+                        <Text style={styles.renderText}>Null</Text>
+                      )}
+                    </View>
+                  </View>
                   <View
                     style={{
                       height: 100,
@@ -478,7 +480,7 @@ const CollectionDetail = ({ navigation, route }) => {
             />
           ) : null}
           {renderHeader()}
-          
+
           {renderHeaderBar()}
         </View>
       </BottomSheetModalProvider>
@@ -588,8 +590,8 @@ const styles = StyleSheet.create({
   renderCollectionDescription: {
     width: width,
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   renderDescription: {
     width: width * 0.96,
@@ -597,15 +599,15 @@ const styles = StyleSheet.create({
   },
   renderText: {
     color: Colors.white,
-    fontSize: Size.fs16
+    fontSize: Size.fs16,
   },
   renderCategory: {
     width: width * 0.3,
     height: 35,
     backgroundColor: Colors.secondary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: Size.small,
-    borderRadius: Size.xl
-  }
+    borderRadius: Size.xl,
+  },
 });

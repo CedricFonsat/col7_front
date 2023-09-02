@@ -32,7 +32,16 @@ export const collectionCardApi = createApi({
         },
       }),
     }),
+    getHome: builder.query({
+      query: () => ({
+        url: "/home",
+        method: "Get",
+        headers: {
+          accept: "application/json",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetCollectionCardsQuery, useGetCollectionCardsByIdQuery, useGetCollectionCardsComingSoonQuery } = collectionCardApi;
+export const { useGetCollectionCardsQuery, useGetCollectionCardsByIdQuery, useGetCollectionCardsComingSoonQuery, useGetHomeQuery } = collectionCardApi;

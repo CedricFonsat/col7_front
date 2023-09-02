@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -16,11 +16,12 @@ import { BlurView } from "expo-blur";
 import Animated from "react-native-reanimated";
 import { useGetCollectionCardsByIdQuery } from "../../store/slices/collectionCardSlice";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { BottomSheetModalProvider, BottomSheetModal, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useMeQuery } from "../../store/slices/authSlice";
 import env from "../../data/env";
 import Button from "../auth/components/Button";
 import background from '../../../assets/illustration/login.png'
+import favoris from "../../../assets/icon/favoris.png";
 
 const HEADER_HEIGHT = 300;
 
@@ -28,8 +29,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const [tabActive, setTabActive] = useState(true);
   const [tabActive2, setTabActive2] = useState(false);
-
-  const IS_AUTH = (1 == 0);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const {
     data: collectionData,
@@ -48,6 +48,22 @@ const ProfileScreen = ({ navigation }) => {
     (total, item) => total + item.price,
     0
   );
+
+  const bottomSheetRef = useRef(null);
+  const handlePresentModalPress = useCallback((item) => {
+    setSelectedCard(item);
+    bottomSheetRef.current?.present();
+  }, []);
+
+  const renderBackdrop = useCallback((props) => {
+    return (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    );
+  }, []);
 
   // console.log("Prix total :", floorPrice);
 
@@ -156,6 +172,7 @@ const ProfileScreen = ({ navigation }) => {
   const renderItems = ({ item, index }) => {
     //  if (item.ifAvailable == false) {
     return (
+      <>
       <Card
         key={item.id}
         name={item.name}
@@ -163,9 +180,84 @@ const ProfileScreen = ({ navigation }) => {
         id={item.id}
         bid="flex"
         image={{
-          uri: `${env.IMAGE_URL_CARD}/${item.imageName}`,
+          uri: item.imageName,
+        }}
+        onPress={() => {
+          handlePresentModalPress(item);
         }}
       />
+      <BottomSheetModal
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={["40%"]}
+      backdropComponent={renderBackdrop}
+    >
+      <View style={styles.contentContainer}>
+        <TouchableOpacity
+          style={styles.bottomSheetFavoris}
+          // onPress={async() => {
+          // //  console.log(isCardInFavorites(selectedCard.id))
+          //  await handleCardFavorite(selectedCard?.id);
+          // }}
+        >
+          <Image
+            source={
+              //  isCardInFavorites(selectedCard?.id) ? addFavoris : favoris
+              favoris
+            }
+            style={styles.iconBottomSheet}
+          />
+        </TouchableOpacity>
+
+        <View>
+          <View style={styles.infosHeadBottomSheet}>
+            <View style={styles.contentAvatarBottomSheet}>
+              <Image
+                style={styles.avatarBottomSheet}
+                source={{
+                  uri: "https://media.sketchfab.com/models/7b9a05ad2bfc42eca59141d550a868e2/thumbnails/c0a545aba25e4fc1a27a040429227266/cd1f9baf456146ab948056ff64f83b51.jpeg",
+                }}
+              />
+            </View>
+            <View>
+              <Text style={styles.textMediumBottomSheet}>
+                By Collect7
+              </Text>
+              <Text style={styles.textTitleBottomSheet}>
+                {selectedCard?.name}
+              </Text>
+              <Text style={styles.textMediumBottomSheet}>
+                On sale for{" "}
+                <Text style={styles.colorTertiary}>
+                  {selectedCard?.price} C7
+                </Text>
+              </Text>
+            </View>
+          </View>
+          <View style={styles.descriptionBottomSheet}>
+            <Text style={styles.textSubTitleBottomSheet}>
+              Description
+            </Text>
+            <Text style={styles.textMediumBottomSheet}>
+              {/* Meka from the MekaVerse - A collection of 8,888 unique
+              generative NFTs from an other universe. */}
+              {collectionData?.description}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.buttonBottomSheet}
+            onPress={() => {
+              buyItem(selectedCard?.id);
+            }}
+          >
+            <Text style={styles.textButtonBottomSheet}>
+              Buy '{"=>"}' Id: {selectedCard?.id} 🎉
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </BottomSheetModal>
+    </>
     );
     // }
   };
@@ -271,7 +363,7 @@ const ProfileScreen = ({ navigation }) => {
                 scale: scrollY.interpolate({
                   inputRange: [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
                   outputRange: [2, 1, 0.75],
-                }),
+                })
               },
             ],
           }}
@@ -293,7 +385,7 @@ const ProfileScreen = ({ navigation }) => {
               <Text>Loading...</Text>
             ) : meData ? (
               <Animated.FlatList
-                data={tabActive ? meData.cards :meData.cards_favoris[0].cards}
+                data={tabActive ? meData?.cards :meData.cards_favoris[0]?.cards}
                 renderItem={renderItems}
                 numColumns={2}
                 keyExtractor={(item) => `${item.id}`}
@@ -430,7 +522,7 @@ const styles = StyleSheet.create({
     color: Colors.gray,
   },
   midInfos: {
-    width: width * 0.9,
+    width: width * 0.96,
     height: 60,
     backgroundColor: Colors.tertiary,
     marginTop: 20,
@@ -525,5 +617,68 @@ const styles = StyleSheet.create({
   },
   tabBarText: {
     color: Colors.white,
+  },
+  buttonBottomSheet: {
+    width: width * 0.88,
+    height: 60,
+    backgroundColor: Colors.secondary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: Size.default,
+    borderRadius: Size.xs,
+  },
+  infosHeadBottomSheet: {
+    flexDirection: "row",
+    paddingHorizontal: Size.default,
+  },
+  contentAvatarBottomSheet: {
+    width: 80,
+    height: 80,
+    backgroundColor: Colors.secondary,
+    marginRight: Size.default,
+    borderRadius: Size.xl,
+    overflow: "hidden",
+  },
+  avatarBottomSheet: {
+    width: "100%",
+    height: "100%",
+  },
+  textTitleBottomSheet: {
+    fontSize: Size.fs20,
+    fontWeight: Size.bold,
+  },
+  textMediumBottomSheet: {
+    fontSize: Size.fs18,
+    color: Colors.gray,
+    fontWeight: Size.w600,
+  },
+  descriptionBottomSheet: {
+    paddingHorizontal: Size.default,
+    marginVertical: Size.default,
+  },
+  textButtonBottomSheet: {
+    fontSize: Size.fs20,
+    fontWeight: Size.bold,
+    color: Colors.white,
+  },
+  textSubTitleBottomSheet: {
+    fontSize: Size.fs18,
+    fontWeight: Size.bold,
+    marginBottom: Size.xs,
+  },
+  bottomSheetFavoris: {
+    position: "absolute",
+    right: 30,
+    width: 50,
+    height: 50,
+    borderRadius: Size.xl,
+    backgroundColor: "rgba(245,230,222,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999999,
+  },
+  iconBottomSheet: {
+    width: 20,
+    height: 20,
   },
 });
