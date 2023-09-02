@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
  const { data: homeData } = useGetHomeQuery();
 
 
- console.log(homeData?.users, '..*****');
+ console.log(homeData?.collection, '..*****');
  
 
   const {
@@ -167,15 +167,10 @@ const HomeScreen = ({ navigation }) => {
 
     return (
       <View style={styles.collectionList}>
-        {collectionError ? (
-          <Text>Oh no, there was an error</Text>
-        ) : collectionIsLoading ? (
-          <Text>Loading...</Text>
-        ) : collectionData ? (
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={homeData.collection}
+            data={homeData?.collection}
             renderItem={({ item }) => (
               <CollectionItem
                 title={item.name}
@@ -186,7 +181,6 @@ const HomeScreen = ({ navigation }) => {
             )}
             keyExtractor={(item) => item.id}
           />
-        ) : null}
       </View>
     );
   };

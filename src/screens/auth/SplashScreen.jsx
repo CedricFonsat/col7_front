@@ -19,9 +19,19 @@ const SplashScreen = () => {
     
       AsyncStorage.getItem("@token").then((res) => {
         
-        console.log("1", res);
+        console.log("1", res ? res.code : null, res?.code);
+
+        if(res?.code == "password_too_weak"){
+          navigation.navigate("RegisterScreen");
+          return
+         }
+  
+         if (res?.code == "existing_email") {
+          navigation.navigate("RegisterScreen");
+          return
+         }
       //  navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
-        navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
+         navigation.replace(res ? 'DrawerNavigator' : 'LoginScreen');
        // dispatch(addData('New Data'));
       });
 

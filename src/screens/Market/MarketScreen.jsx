@@ -26,6 +26,8 @@ const MarketScreen = () => {
    // image: "https://fiverr-res.cloudinary.com/t_main1,q_auto,f_auto/gigs/257218235/original/5516cb5c85fbf3a1df3a293f62dbf78a3e78f960.png",
   };
 
+  console.log(data);
+
   const renderHeaderBar = () => {
     return (
       <View
@@ -146,7 +148,7 @@ const MarketScreen = () => {
                 height: "100%",
               }}
               source={{
-                uri: `${env.IMAGE_URL_COLLECTION}/${item.imageName}`,
+                uri: item.imageName,
               }}
             />
           </View>

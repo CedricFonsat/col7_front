@@ -9,9 +9,8 @@ import React, { useState, useEffect } from "react";
 import { useLoginMutation } from "../../store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import { showMessage } from "react-native-flash-message";
 //import { useMeQuery } from "../../store/slices/authSlice";
-
-import * as ImagePicker from 'expo-image-picker';
 
 
 export default function LoginScreen({navigation}) {
@@ -48,35 +47,46 @@ export default function LoginScreen({navigation}) {
     
         navigation.navigate("SplashScreen");
       })
-      .catch(() => console.log("pas bon"));
-    setPassword("");
-    setUsername("");
+      .catch(() => {
+          showMessage({
+            message: "Error",
+            description: "An error occurred during your connection",
+            type: "danger"
+          });
+          navigation.navigate("LoginScreen");
+      });
+  //  setPassword("");
+   // setUsername("");
 
-    navigation.navigate("SplashScreen");
+  //  navigation.navigate("SplashScreen");
   };
 
 //ced97x@gmail.com  
 //contact@collect7.fr
 
-const googleLogo = () => {
-  return (
-    <>
-    <Fontisto name="star" size={30} color="gold" />
-    <Text>Google</Text>
-    </>
-  )
-}
 
   return (
     <View style={styles.container}>
       <Button
         icon={<Fontisto name="google" size={20} color="white" style={{marginRight: Size.small}} />}
-        text="Google"
-        backgroundColor={Colors.tertiary}
+        text="Connect with Google"
+        backgroundColor={Colors.gray}
         borderWith={1}
         borderColor={Colors.borderColor}
       />
-      <View style={styles.line}></View>
+      
+      <View style={{
+        flexDirection: 'row',
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30
+      }}>
+      <View style={styles.line} />
+      <Text style={styles.text}>Or</Text>
+      <View style={styles.line} />
+      </View>
+      
       <Text style={styles.label}>Email</Text>
       <Input
        placeholder="Enter your email"
@@ -92,8 +102,6 @@ const googleLogo = () => {
         placeholder="Enter your password"
         placeholderTextColor={Colors.white}
         secureTextEntry={true}
-        borderWith={1}
-        borderColor={Colors.borderColor}
         value={password}
         onChangeText={setPassword}
         autoCapitalize='none'
@@ -144,10 +152,6 @@ const styles = StyleSheet.create({
   captionTextSignUp: {
     color: Colors.gray,
   },
-  line: {
-    width: width * 0.8,
-    height: height * 0.08,
-  },
   label: {
     width: width * 0.8,
     marginVertical: Size.small,
@@ -156,4 +160,14 @@ const styles = StyleSheet.create({
   link:{
     color: Colors.secondary,
   },
+  line: {
+    height: .5,
+    width: width * .3,
+    backgroundColor: 'white',
+  },
+  text: {
+    marginHorizontal: 10,
+    fontSize: 16,
+    color: 'white'
+  }
 });

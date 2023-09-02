@@ -1,9 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import env from "../../data/env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const collectionCardApi = createApi({
   reducerPath: "collectionCardApi",
-  baseQuery: fetchBaseQuery({ baseUrl: env.API_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: env.API_URL,
+    prepareHeaders: async (headers) => {
+      const user = await AsyncStorage.getItem("@token");
+      if (user) {
+        headers.set('Authorization', `Bearer ${user}`);
+      }
+      headers.set('Accept', 'application/json');
+      return headers;
+    }
+  }),
   endpoints: (builder) => ({
     getCollectionCards: builder.query({
       query: () => ({

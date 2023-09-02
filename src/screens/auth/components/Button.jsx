@@ -3,19 +3,22 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-nati
 import Size from '../../../constants/Size';
 import Colors, { borderColor } from '../../../constants/Colors';
 
-export default function Button({text,icon, backgroundColor, borderColor, borderWith, onPress}) {
+export default function Button({text,icon, backgroundColor, borderColor, borderWith, onPress, left, top, right}) {
   return (
       <>
     <TouchableOpacity style={[styles.container, {
       backgroundColor:backgroundColor,
       borderColor: borderColor,
-      borderWidth: borderWith
+      borderWidth: borderWith,
+      justifyContent: left ? null : 'center',
+      marginTop: top ? top : null
       }]}
       
       onPress={onPress}
       >
-      {icon && icon}  
+    {icon && icon}  
     <Text style={styles.text}>{text}</Text>
+    {right && right}
     </TouchableOpacity>
     </>
   );
@@ -31,7 +34,6 @@ const styles = StyleSheet.create({
     color: Colors.white,
     borderRadius: Size.small,
     alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'row'
   },
   text: {

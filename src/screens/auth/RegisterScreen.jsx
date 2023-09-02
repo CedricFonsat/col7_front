@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from "react-native";
 import { Link } from "@react-navigation/native";
 import Colors from "../../constants/Colors";
 import Size from "../../constants/Size";
@@ -8,6 +8,9 @@ import Button from "./components/Button";
 import { useState } from "react";
 import { useRegisterMutation } from "../../store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { showMessage, hideMessage } from "react-native-flash-message";
+import arrow from "../../../assets/icon/left.png"
+import background from "../../../assets/illustration/login.png"
 
 export default function RegisterScreen({navigation}) {
 
@@ -28,25 +31,94 @@ export default function RegisterScreen({navigation}) {
 
     register(formData).unwrap()
     .then((res) => {
-       console.log('Good Job',res);
+       console.log('Good Job',res, res.code);
 
-       AsyncStorage.setItem("@token", res.token);
+       if(res?.code == "password_too_weak"){
+        navigation.navigate("RegisterScreen");
+        showMessage({
+          message: "Error",
+          description: "Password too weak",
+          type: "danger"
+        });
+        return
+       }
+
+       if (res?.code == "existing_email") {
+        navigation.navigate("RegisterScreen");
+        return
+       }
+
+       if (res.token) {
+        AsyncStorage.setItem("@token", res.token);
+       }
         setPassword();
         setEmail('');
         setUsername('');
 
         navigation.navigate("SplashScreen");
     })
-    .catch((er) =>
+    .catch((er) => {
+        navigation.navigate("RegisterScreen");
         console.log('pas bon',er)
+      }
     )
+  };
+
+  const leftButton = ({ navigation }) => {
+    return (
+      <TouchableOpacity
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: Size.xl,
+          backgroundColor: Colors.primary,
+          justifyContent: "center",
+          alignItems: "center",
+          borderColor: Colors.borderColor,
+          borderWidth: 1,
+          overflow: "hidden",
+          zIndex: 99999,
+        }}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.8}
+      >
+        <Image
+          style={{
+            width: 20,
+            height: 20,
+            tintColor: Colors.white,
+          }}
+          source={arrow}
+        />
+      </TouchableOpacity>
+    );
+  };
+
+  const renderHeader = () => {
+    return (
+      <View
+        style={{
+          width: width,
+          height: 100,
+          position: "absolute",
+          justifyContent: "flex-end",
+          paddingHorizontal: Size.default,
+          zIndex: 999,
+        }}
+      >
+        {leftButton({ navigation })}
+      </View>
+    );
   };
 
   return (
     <View style={styles.container}>
+      {renderHeader()}
       {/* Navigation */}
       <View style={styles.navigation}>
-        <Text>Sign up and icon</Text>
+        <Image style={{
+          width: '130%'
+        }} source={background} />
       </View>
 
       {/* Header */}
@@ -116,6 +188,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.primary,
     alignItems: "center",
+    overflow:'hidden'
   },
   header: {
     width: width,
@@ -167,7 +240,7 @@ const styles = StyleSheet.create({
   },
   navigation: {
     width: width,
-    height: height * 0.15,
+    height: height * 0.2,
     backgroundColor: Colors.secondary,
     justifyContent: "center",
     alignItems: "center",

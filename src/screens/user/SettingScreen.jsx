@@ -10,6 +10,7 @@ import {
 import Colors from "../../constants/Colors";
 import Size from "../../constants/Size";
 import Button from "../auth/components/Button";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function SettingScreen({navigation}) {
 
@@ -31,7 +32,43 @@ export default function SettingScreen({navigation}) {
           alignItems: "center",
         }}
       >
-        <Button text="Confidentiliter" backgroundColor={Colors.gray} onPress={() => navigation.navigate('condition')} />
+        <Button
+        icon={<MaterialCommunityIcons
+          name="security"
+          color={Colors.white}
+          size={26}
+          style={{
+            marginHorizontal: 20
+          }}
+        />}
+        left
+        text="Privacy"
+         backgroundColor={Colors.tertiary}
+          onPress={() => navigation.navigate('condition')} />
+
+           <Button
+        icon={<MaterialCommunityIcons
+          name="bell"
+          color={Colors.white}
+          size={26}
+          style={{
+            marginHorizontal: 20
+          }}
+        />}
+        right={<Switch
+          trackColor={{ false: '#767577', true: '#81b0ff' }}
+          thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+          style={{
+            marginHorizontal: width * .35
+          }}
+         />}
+        left
+        top={10}
+        text="Notification"
+         backgroundColor={Colors.tertiary} />
       </View>
 
       <View
@@ -45,18 +82,6 @@ export default function SettingScreen({navigation}) {
           paddingHorizontal: Size.default
         }}
       >
-        <Text style={{
-          color: Colors.white,
-          fontSize: Size.fs20,
-          fontWeight: Size.w600
-        }}>Notifications {isEnabled ? 'On' : 'Off'}</Text>
-        <Switch
-         trackColor={{ false: '#767577', true: '#81b0ff' }}
-         thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-         ios_backgroundColor="#3e3e3e"
-         onValueChange={toggleSwitch}
-         value={isEnabled}
-        />
       </View>
     </View>
   );

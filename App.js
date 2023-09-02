@@ -1,6 +1,7 @@
 import AppNavigator from "./src/navigation/app.navigator";
 import { store } from "./src/store/store";
 import { Provider } from "react-redux";
+import FlashMessage from "react-native-flash-message";
 //import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -10,6 +11,7 @@ export default function App() {
   return (
     <Provider store={store}>
           <AppNavigator />
+          <FlashMessage position="top" />
     </Provider>
   );
 }

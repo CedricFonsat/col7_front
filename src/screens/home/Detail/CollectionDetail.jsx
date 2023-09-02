@@ -237,7 +237,7 @@ const CollectionDetail = ({ navigation, route }) => {
             bid="flex"
             // favorite={isCardInFavorites(item.id)}
             image={{
-              uri: item.imageName,
+              uri: item?.imageName,
             }}
           />
           <BottomSheetModal
@@ -358,7 +358,7 @@ const CollectionDetail = ({ navigation, route }) => {
       >
         <Animated.Image
           source={{
-            uri: `${env.IMAGE_URL_COLLECTION}/${collectionData.imageName}`,
+            uri: collectionData?.imageName,
           }}
           sharedTransitionTag="sharedTag"
           resizeMode="contain"

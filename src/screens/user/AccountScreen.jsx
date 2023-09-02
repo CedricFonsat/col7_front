@@ -13,6 +13,8 @@ import { useMeQuery } from "../../store/slices/authSlice";
 import Button from "../auth/components/Button";
 import { useDeleteUserMutation } from "../../store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 
 const AccountEditScreen = ({navigation}) => {
@@ -49,17 +51,47 @@ const AccountEditScreen = ({navigation}) => {
     {text: 'OK', onPress: () => {handleDeleteAccount()}},
   ]);
 
+  //account-edit
 
   return (
     <View style={styles.backgroundAccount}>
-      <View>
-      <Text style={styles.label}>Change your profile</Text>
-       <Button
-        text="Update your profile"
-        backgroundColor={Colors.secondary}
-        onPress={() => navigation.navigate("AccountEdit")}
-      />
-      </View>
+
+   <Button
+        icon={<MaterialCommunityIcons
+          name="account-edit"
+          color={Colors.white}
+          size={26}
+          style={{
+            marginHorizontal: 20
+          }}
+        />}
+        left
+        top={10}
+        text="Edit your profile"
+         backgroundColor={Colors.tertiary}
+         onPress={() => navigation.navigate("AccountEdit")}
+         />
+
+     <Button
+        icon={<MaterialCommunityIcons
+          name="lock"
+          color={Colors.white}
+          size={26}
+          style={{
+            marginHorizontal: 20
+          }}
+        />}
+        left
+        top={10}
+        text="Change your password"
+         backgroundColor={Colors.tertiary}
+         onPress={() => navigation.navigate("AccountEdit")}
+         />        
+
+
+
+
+
        <TouchableOpacity style={styles.deleteButton} 
       // onPress={() => navigation.navigate("CustomModal")}
        onPress={() => createTwoButtonAlert()}
