@@ -20,12 +20,11 @@ import Size from "../constants/Size";
 import Colors from "../constants/Colors";
 import CustomModal from "../screens/user/components/CustomModal";
 import { useMeQuery } from "../store/slices/authSlice";
+import ChangePasswordScreen from "../screens/user/ChangePasswordScreen";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
-
-const IS_AUTH = (1 == 0);
 
 const leftButton = ({ navigation }) => {
   return (
@@ -181,7 +180,15 @@ const AccountNavigator = ({ navigation }) => {
     <Stack.Navigator initialRouteName="Account" screenOptions={tabBarOptions}>
 
 <Stack.Screen name="AccountEdit" component={AccountEditScreen}  options={{
-          title: "",
+          title: "Edit Account",
+          headerStyle: {
+            backgroundColor: "#1A1A24",
+            borderBottomColor: "rgba(0, 0, 0, 0)",
+          },
+          headerLeft: () => (leftButton({navigation})),
+        }}/>
+        <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen}  options={{
+          title: "Change Password",
           headerStyle: {
             backgroundColor: "#1A1A24",
             borderBottomColor: "rgba(0, 0, 0, 0)",
@@ -218,7 +225,7 @@ const SettingNavigator = ({ navigation }) => {
         name="Setting"
         component={SettingScreen}
         options={{
-          title: "",
+          title: "Settings",
           headerStyle: {
             backgroundColor: "#1A1A24",
             borderBottomColor: "rgba(0, 0, 0, 0)",

@@ -31,6 +31,7 @@ import addFavoris from "../../../../assets/icon/add-favoris.png";
 
 import env from "../../../data/env";
 import RenderHtml from "react-native-render-html";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const HEADER_HEIGHT = 300;
 
@@ -65,8 +66,19 @@ const CollectionDetail = ({ navigation, route }) => {
     await buyCardById(rest)
       .then((res) => {
         console.log(res);
+        showMessage({
+          message: "Buy",
+          description: "You have just acquired a card",
+          type: "success"
+        });
       })
-      .catch(() => console.log("pas bon"));
+      .catch(() => {
+        showMessage({
+          message: "Error",
+          description: "An error occurred when purchasing your card",
+          type: "danger"
+        });
+        console.log("pas bon")});
     collectionRefetch();
     meRefetch();
   };

@@ -85,7 +85,7 @@ const AccountEditScreen = ({navigation}) => {
         top={10}
         text="Change your password"
          backgroundColor={Colors.tertiary}
-         onPress={() => navigation.navigate("AccountEdit")}
+         onPress={() => navigation.navigate("ChangePasswordScreen")}
          />        
 
 

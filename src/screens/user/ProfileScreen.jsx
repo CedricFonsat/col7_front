@@ -22,6 +22,7 @@ import env from "../../data/env";
 import Button from "../auth/components/Button";
 import background from '../../../assets/illustration/login.png'
 import favoris from "../../../assets/icon/favoris.png";
+import logo from "../../../assets/logo/logo.png"
 
 const HEADER_HEIGHT = 300;
 
@@ -424,10 +425,33 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         ) : (
           <View style={[styles.container, stylesBis.container]}>
-            <View style={stylesBis.headShow}>
+            {/* <View style={stylesBis.headShow}>
               <Image style={stylesBis.image} source={background} />
-            </View> 
-            <Button text='Sign in' backgroundColor={Colors.secondary} onPress={() => navigation.navigate('LoginScreen')} />
+            </View>  */}
+            <View style={stylesBis.navigation}>
+        <Image style={{
+          width: '130%'
+        }} source={background} />
+      </View>
+      <View style={{
+        height: 250,
+        marginTop: 50
+      }}>
+      <Image style={{
+          width: 150,
+          height: 150
+                  }} source={logo} />
+      </View>
+            <Button
+             icon={<MaterialCommunityIcons
+              name="login"
+              color={Colors.white}
+              size={26}
+              style={{
+                marginHorizontal: 10
+              }}
+            />}
+            text='Sign in' backgroundColor={Colors.secondary} onPress={() => navigation.navigate('LoginScreen')} />
           </View>
         )}
       </BottomSheetModalProvider>
@@ -441,20 +465,22 @@ const { width, height } = Dimensions.get("window");
 
 const stylesBis = StyleSheet.create({
   container: {
-    alignItems: 'center'
-  },
-  headShow: {
-    width: width,
-    height: height * 0.4,
-    position: 'relative',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginBottom: Size.xl
+    overflow: 'hidden'
+  },
+  navigation: {
+    width: width,
+    height: height * 0.2,
+    backgroundColor: Colors.secondary,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: Size.default,
   },
   image: {
     width: '150%',
-    height: '100%',
+    height: '130%',
     position: 'absolute',
+    zIndex: 1
   }
 })
 
