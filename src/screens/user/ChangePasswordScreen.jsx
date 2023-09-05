@@ -63,6 +63,7 @@ const ChangePasswordScreen = () => {
 
   return (
     <View style={styles.backgroundAccount}>
+      
  
       <Input
        placeholder="Enter your last password"
@@ -73,32 +74,6 @@ const ChangePasswordScreen = () => {
        onChangeText={setLastPassword}
        autoCapitalize='none'
        styleSheets={styles.input}
-      />
-
-      <Input
-       placeholder="Enter your new password"
-       placeholderTextColor={Colors.white}
-       borderWidth={1}
-       borderColor={Colors.borderColor}
-       value={newPassword}
-       onChangeText={setNewPassword}
-       autoCapitalize='none'
-       styleSheets={styles.input}
-       rules={{
-        required: 'Requis',
-            pattern: {
-              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,30}$/,
-              message: 'You need at least one uppercase letter, one lowercase letter and one number',
-            },
-            maxLength: {
-              value: 30,
-              message: 'Password too long',
-            },
-            minLength: {
-              value: 6,
-              message: 'Password too short',
-            },
-      }}
       />
 
        <Button

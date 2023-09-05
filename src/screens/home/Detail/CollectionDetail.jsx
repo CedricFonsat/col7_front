@@ -53,6 +53,9 @@ const CollectionDetail = ({ navigation, route }) => {
     refetch: collectionRefetch,
   } = useGetCollectionCardsByIdQuery(itemId);
 
+
+ // console.log(collectionData, '****************************************');
+
   const availableCards = collectionData?.cards.filter(
     (item) => item.ifAvailable
   );
@@ -82,6 +85,12 @@ const CollectionDetail = ({ navigation, route }) => {
     collectionRefetch();
     meRefetch();
   };
+
+  showMessage({
+    message: "Error",
+    description: "An error occurred when purchasing your card",
+    type: "danger"
+  });
 
   // const handleCardFavorite = async (id) => {
   //   const favoriteCardById = {
@@ -225,16 +234,18 @@ const CollectionDetail = ({ navigation, route }) => {
   };
 
   const renderItems = ({ item, index }) => {
-    if (item.ifAvailable == true) {
-      if (item.users) {
-        const modifiedUsers = item.users.map((user) => {
-          if (user?.id == 2) {
-            return true;
-          }
+    // if (item.ifAvailable == true) {
+    //   if (item.users) {
+    //     const modifiedUsers = item.users.map((user) => {
+    //       if (user?.id == 2) {
+    //         return true;
+    //       }
 
-          return false;
-        });
-      }
+    //       return false;
+    //     });
+    //   }
+
+   // console.log(item,'//////////////////');
 
       return (
         <>
@@ -246,7 +257,7 @@ const CollectionDetail = ({ navigation, route }) => {
             onPress={() => {
               handlePresentModalPress(item);
             }}
-            bid="flex"
+           // bid="flex"
             // favorite={isCardInFavorites(item.id)}
             image={{
               uri: item?.imageName,
@@ -317,7 +328,8 @@ const CollectionDetail = ({ navigation, route }) => {
                   }}
                 >
                   <Text style={styles.textButtonBottomSheet}>
-                    Buy '{"=>"}' Id: {selectedCard?.id} 🎉
+                    Buy
+                     {/* '{"=>"}' Id: {selectedCard?.id} 🎉 */}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -325,7 +337,7 @@ const CollectionDetail = ({ navigation, route }) => {
           </BottomSheetModal>
         </>
       );
-    }
+   // }
   };
 
   const source = {
@@ -333,9 +345,9 @@ const CollectionDetail = ({ navigation, route }) => {
   };
 
   const tagsStyles = {
-    div: {
+    p: {
       whiteSpace: "normal",
-      color: "white",
+      color: Colors.white,
       fontSize: 16,
     },
   };
@@ -441,7 +453,7 @@ const CollectionDetail = ({ navigation, route }) => {
             <Text>Loading...</Text>
           ) : collectionData ? (
             <Animated.FlatList
-              data={availableCards}
+              data={collectionData.cards}
               renderItem={renderItems}
               numColumns={2}
               keyExtractor={(item) => `${item.id}`}

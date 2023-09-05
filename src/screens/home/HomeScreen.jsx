@@ -25,6 +25,9 @@ const HomeScreen = ({ navigation }) => {
   const { data: meData } = useMeQuery();
 
 
+
+
+
 // useEffect(async() => {
 //  await connexion({userId: meData.id})
 //  .then((res) => {

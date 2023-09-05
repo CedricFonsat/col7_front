@@ -1,26 +1,25 @@
 import React from "react";
 import { TouchableOpacity, Image } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-// init route
+import arrow from "../../assets/icon/left.png";
+import Size from "../constants/Size";
+import Colors from "../constants/Colors";
+import { useMeQuery } from "../store/slices/authSlice";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// route
+
 import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import SearchScreen from "../screens/search/SearchScreen";
 import MarketScreen from "../screens/Market/MarketScreen";
 import AccountScreen from "../screens/user/AccountScreen";
-// style
-import CustomDrawer from "../components/CustomDrawer";
+import ChangePasswordScreen from "../screens/user/ChangePasswordScreen";
 import AccountEditScreen from "../screens/user/AccountEditScreen";
 import SettingScreen from "../screens/user/SettingScreen";
-import arrow from "../../assets/icon/left.png";
-import Size from "../constants/Size";
-import Colors from "../constants/Colors";
+import CustomDrawer from "../components/CustomDrawer";
 import CustomModal from "../screens/user/components/CustomModal";
-import { useMeQuery } from "../store/slices/authSlice";
-import ChangePasswordScreen from "../screens/user/ChangePasswordScreen";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();

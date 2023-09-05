@@ -122,13 +122,13 @@ const CustomDrawer = (props) => {
                 </View>
               </>
   
-              <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen')} >
+              {/* <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen')} >
                 <MaterialCommunityIcons
                   style={styles.white}
                   name="login"
                   size={40}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
           </View>
         </View>

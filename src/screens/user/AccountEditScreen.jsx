@@ -25,6 +25,17 @@ const AccountEditScreen = () => {
 
   const [updateUser] = useUpdateUserMutation();
 
+  function generateUniqueName() {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const randomSuffix = Math.random().toString(36).substring(7); // Generate a random string
+  
+    const uniqueName = `unique_${timestamp}_${randomSuffix}`;
+    return uniqueName;
+  }
+  
+  const uniqueName = generateUniqueName();
+ 
+
 
   /***************************************************   Add PHOTO  */
 
@@ -117,7 +128,7 @@ const AccountEditScreen = () => {
       uriToBase64(uri)
         .then((base64Data) => {
            if (base64Data) {
-            uploadImage(base64Data,'image.jpg')
+            uploadImage(base64Data,`${uniqueName}.jpg`)
            }
         })
         .catch((error) => {
@@ -183,7 +194,7 @@ const AccountEditScreen = () => {
             />
       {image ? (
         <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
-      ): <Image source={{ uri: `${env.IMAGE_URL_USER}/${data.imageName}`}}
+      ): <Image source={{ uri: data.imageUrl }}
       style={{ width: '100%', height: '100%' }}
       />}
       </TouchableOpacity>
