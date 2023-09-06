@@ -36,6 +36,7 @@ const AccountEditScreen = () => {
   const uniqueName = generateUniqueName();
  
 
+  console.log(data?.id);
 
   /***************************************************   Add PHOTO  */
 
@@ -43,6 +44,7 @@ const AccountEditScreen = () => {
 
    const uploadImage = async (base64,name) => {
     const formData = {
+      userId: data?.id,
       name: name,
       base64: base64
     }
@@ -194,7 +196,7 @@ const AccountEditScreen = () => {
             />
       {image ? (
         <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
-      ): <Image source={{ uri: data.imageUrl }}
+      ): <Image source={{ uri: data?.imageUrl }}
       style={{ width: '100%', height: '100%' }}
       />}
       </TouchableOpacity>

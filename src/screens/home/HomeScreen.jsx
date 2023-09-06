@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation }) => {
  const { data: homeData } = useGetHomeQuery();
 
 
- console.log(homeData?.collection, '..*****');
+ //console.log(homeData?.collection, '..*****');
  
 
   const {

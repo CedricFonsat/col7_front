@@ -54,6 +54,7 @@ const CollectionDetail = ({ navigation, route }) => {
   } = useGetCollectionCardsByIdQuery(itemId);
 
 
+
  // console.log(collectionData, '****************************************');
 
   const availableCards = collectionData?.cards.filter(
@@ -82,15 +83,10 @@ const CollectionDetail = ({ navigation, route }) => {
           type: "danger"
         });
         console.log("pas bon")});
+        handleClosePress();
     collectionRefetch();
     meRefetch();
   };
-
-  showMessage({
-    message: "Error",
-    description: "An error occurred when purchasing your card",
-    type: "danger"
-  });
 
   // const handleCardFavorite = async (id) => {
   //   const favoriteCardById = {
@@ -360,6 +356,8 @@ const CollectionDetail = ({ navigation, route }) => {
     bottomSheetRef.current?.present();
   }, []);
 
+  const handleClosePress = () => bottomSheetRef.current.close()
+
   const renderBackdrop = useCallback((props) => {
     return (
       <BottomSheetBackdrop
@@ -453,7 +451,7 @@ const CollectionDetail = ({ navigation, route }) => {
             <Text>Loading...</Text>
           ) : collectionData ? (
             <Animated.FlatList
-              data={collectionData.cards}
+              data={availableCards}
               renderItem={renderItems}
               numColumns={2}
               keyExtractor={(item) => `${item.id}`}
