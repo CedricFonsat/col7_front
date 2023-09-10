@@ -16,6 +16,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Input from "../auth/components/Input";
 import Button from "../auth/components/Button";
 import env from "../../data/env";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 const AccountEditScreen = () => {
@@ -24,6 +25,18 @@ const AccountEditScreen = () => {
 
   const [updateUser] = useUpdateUserMutation();
 
+  function generateUniqueName() {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const randomSuffix = Math.random().toString(36).substring(7); // Generate a random string
+  
+    const uniqueName = `unique_${timestamp}_${randomSuffix}`;
+    return uniqueName;
+  }
+  
+  const uniqueName = generateUniqueName();
+ 
+
+  console.log(data?.id);
 
   /***************************************************   Add PHOTO  */
 
@@ -31,6 +44,7 @@ const AccountEditScreen = () => {
 
    const uploadImage = async (base64,name) => {
     const formData = {
+      userId: data?.id,
       name: name,
       base64: base64
     }
@@ -41,12 +55,24 @@ const AccountEditScreen = () => {
     .unwrap()
     .then((res) => {
      // console.log(res);
+     showMessage({
+      message: "Saved",
+      description: "The image was saved successfully",
+      type: "success"
+    });
 
       console.log('good job upload image');
       meRefetch()
   
     })
-    .catch((err) => console.log("pas bon img", err));
+    .catch((err) => {
+      showMessage({
+        message: "Error",
+        description: "Error uploading image",
+        type: "danger"
+      });
+      
+      console.log("pas bon img", err)});
    };
 
   const [image, setImage] = useState(null);
@@ -83,6 +109,15 @@ const AccountEditScreen = () => {
             reader.readAsDataURL(blob);
           });
         } catch (error) {
+
+
+          showMessage({
+            message: "Error",
+            description: "Error uploading image",
+            type: "danger"
+          });
+
+
           console.error(
             "Erreur lors de la conversion de l'image en base64:",
             error
@@ -95,10 +130,15 @@ const AccountEditScreen = () => {
       uriToBase64(uri)
         .then((base64Data) => {
            if (base64Data) {
-            uploadImage(base64Data,'image.jpg')
+            uploadImage(base64Data,`${uniqueName}.jpg`)
            }
         })
         .catch((error) => {
+          showMessage({
+            message: "Error",
+            description: "Error uploading image",
+            type: "danger"
+          });
           console.error("Une erreur s'est produite:", error);
         });
     }
@@ -124,10 +164,24 @@ const AccountEditScreen = () => {
     updateUser(formData).unwrap()
     .then((res) => {
        console.log('Good Job', res, '%%%*');
+       showMessage({
+        message: "Saved",
+        description: "Account updated successfully",
+        type: "success"
+      });
        meRefetch()
     })
-    .catch((er) =>
+    .catch((er) => {
         console.log('pas bon user',er)
+
+        showMessage({
+          message: "Error",
+          description: "Error",
+          type: "danger"
+        });
+
+
+    }
     )
   };
 
@@ -142,7 +196,7 @@ const AccountEditScreen = () => {
             />
       {image ? (
         <Image source={{ uri: image }} style={{ width: '100%', height: '100%' }} />
-      ): <Image source={{ uri: `${env.IMAGE_URL_USER}/${data.imageName}`}}
+      ): <Image source={{ uri: data?.imageUrl }}
       style={{ width: '100%', height: '100%' }}
       />}
       </TouchableOpacity>

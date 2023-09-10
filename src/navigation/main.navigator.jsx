@@ -1,31 +1,29 @@
 import React from "react";
 import { TouchableOpacity, Image } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-// init route
+import arrow from "../../assets/icon/left.png";
+import Size from "../constants/Size";
+import Colors from "../constants/Colors";
+import { useMeQuery } from "../store/slices/authSlice";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// route
+
 import HomeScreen from "../screens/home/HomeScreen";
 import ProfileScreen from "../screens/user/ProfileScreen";
 import SearchScreen from "../screens/search/SearchScreen";
 import MarketScreen from "../screens/Market/MarketScreen";
 import AccountScreen from "../screens/user/AccountScreen";
-// style
-import CustomDrawer from "../components/CustomDrawer";
+import ChangePasswordScreen from "../screens/user/ChangePasswordScreen";
 import AccountEditScreen from "../screens/user/AccountEditScreen";
 import SettingScreen from "../screens/user/SettingScreen";
-import arrow from "../../assets/icon/left.png";
-import Size from "../constants/Size";
-import Colors from "../constants/Colors";
+import CustomDrawer from "../components/CustomDrawer";
 import CustomModal from "../screens/user/components/CustomModal";
-import { useMeQuery } from "../store/slices/authSlice";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
-
-const IS_AUTH = (1 == 0);
 
 const leftButton = ({ navigation }) => {
   return (
@@ -181,7 +179,15 @@ const AccountNavigator = ({ navigation }) => {
     <Stack.Navigator initialRouteName="Account" screenOptions={tabBarOptions}>
 
 <Stack.Screen name="AccountEdit" component={AccountEditScreen}  options={{
-          title: "",
+          title: "Edit Account",
+          headerStyle: {
+            backgroundColor: "#1A1A24",
+            borderBottomColor: "rgba(0, 0, 0, 0)",
+          },
+          headerLeft: () => (leftButton({navigation})),
+        }}/>
+        <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen}  options={{
+          title: "Change Password",
           headerStyle: {
             backgroundColor: "#1A1A24",
             borderBottomColor: "rgba(0, 0, 0, 0)",
@@ -218,7 +224,7 @@ const SettingNavigator = ({ navigation }) => {
         name="Setting"
         component={SettingScreen}
         options={{
-          title: "",
+          title: "Settings",
           headerStyle: {
             backgroundColor: "#1A1A24",
             borderBottomColor: "rgba(0, 0, 0, 0)",

@@ -31,6 +31,7 @@ import addFavoris from "../../../../assets/icon/add-favoris.png";
 
 import env from "../../../data/env";
 import RenderHtml from "react-native-render-html";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const HEADER_HEIGHT = 300;
 
@@ -52,6 +53,10 @@ const CollectionDetail = ({ navigation, route }) => {
     refetch: collectionRefetch,
   } = useGetCollectionCardsByIdQuery(itemId);
 
+
+
+ // console.log(collectionData, '****************************************');
+
   const availableCards = collectionData?.cards.filter(
     (item) => item.ifAvailable
   );
@@ -65,8 +70,20 @@ const CollectionDetail = ({ navigation, route }) => {
     await buyCardById(rest)
       .then((res) => {
         console.log(res);
+        showMessage({
+          message: "Buy",
+          description: "You have just acquired a card",
+          type: "success"
+        });
       })
-      .catch(() => console.log("pas bon"));
+      .catch(() => {
+        showMessage({
+          message: "Error",
+          description: "An error occurred when purchasing your card",
+          type: "danger"
+        });
+        console.log("pas bon")});
+        handleClosePress();
     collectionRefetch();
     meRefetch();
   };
@@ -213,16 +230,18 @@ const CollectionDetail = ({ navigation, route }) => {
   };
 
   const renderItems = ({ item, index }) => {
-    if (item.ifAvailable == true) {
-      if (item.users) {
-        const modifiedUsers = item.users.map((user) => {
-          if (user?.id == 2) {
-            return true;
-          }
+    // if (item.ifAvailable == true) {
+    //   if (item.users) {
+    //     const modifiedUsers = item.users.map((user) => {
+    //       if (user?.id == 2) {
+    //         return true;
+    //       }
 
-          return false;
-        });
-      }
+    //       return false;
+    //     });
+    //   }
+
+   // console.log(item,'//////////////////');
 
       return (
         <>
@@ -234,7 +253,7 @@ const CollectionDetail = ({ navigation, route }) => {
             onPress={() => {
               handlePresentModalPress(item);
             }}
-            bid="flex"
+           // bid="flex"
             // favorite={isCardInFavorites(item.id)}
             image={{
               uri: item?.imageName,
@@ -305,7 +324,8 @@ const CollectionDetail = ({ navigation, route }) => {
                   }}
                 >
                   <Text style={styles.textButtonBottomSheet}>
-                    Buy '{"=>"}' Id: {selectedCard?.id} 🎉
+                    Buy
+                     {/* '{"=>"}' Id: {selectedCard?.id} 🎉 */}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -313,7 +333,7 @@ const CollectionDetail = ({ navigation, route }) => {
           </BottomSheetModal>
         </>
       );
-    }
+   // }
   };
 
   const source = {
@@ -321,9 +341,9 @@ const CollectionDetail = ({ navigation, route }) => {
   };
 
   const tagsStyles = {
-    div: {
+    p: {
       whiteSpace: "normal",
-      color: "white",
+      color: Colors.white,
       fontSize: 16,
     },
   };
@@ -335,6 +355,8 @@ const CollectionDetail = ({ navigation, route }) => {
     setSelectedCard(item);
     bottomSheetRef.current?.present();
   }, []);
+
+  const handleClosePress = () => bottomSheetRef.current.close()
 
   const renderBackdrop = useCallback((props) => {
     return (

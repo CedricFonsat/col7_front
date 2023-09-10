@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, TextInput, Dimensions } from 
 import Size from '../../../constants/Size';
 import Colors from '../../../constants/Colors';
 
-export default function Input({placeholder, secureTextEntry,styleSheets, borderColor, borderWith, onChange, onChangeText, value, placeholderTextColor, autoCapitalize}) {
+export default function Input({placeholder, secureTextEntry,styleSheets, borderColor, borderWith, onChange, onChangeText, value, placeholderTextColor, autoCapitalize, rules}) {
   return (
       <>
     <TextInput
@@ -18,6 +18,7 @@ export default function Input({placeholder, secureTextEntry,styleSheets, borderC
      onChange={onChange}
      onChangeText={onChangeText}
      autoCapitalize={autoCapitalize}
+     passwordRules={rules}
      />
     </>
   );

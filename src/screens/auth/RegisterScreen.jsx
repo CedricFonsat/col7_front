@@ -138,6 +138,21 @@ export default function RegisterScreen({navigation}) {
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
+          // rules={{
+          //   required: 'Requis',
+          //   // pattern: {
+          //   //   value: /^(?!.*[._]{2})[a-z0-9._]+$/,
+          //   //   message: 'This username is not accepted',
+          //   // },
+          //   maxLength: {
+          //     value: 15,
+          //     message: 'Password too long',
+          //   },
+          //   minLength: {
+          //     value: 3,
+          //     message: 'Password too short',
+          //   },
+          // }}
         />
         <Text style={styles.label}>Email</Text>
         <Input
@@ -146,15 +161,37 @@ export default function RegisterScreen({navigation}) {
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
+          // rules={{
+          //   required: 'Requis',
+          //   pattern: {
+          //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          //     message: 'Email incorrect',
+          //   },
+          // }}
         />
         <Text style={styles.label}>Password</Text>
         <Input
           placeholder="************"
           placeholderTextColor={Colors.gray}
-          // secureTextEntry={true}
+          secureTextEntry={true}
           value={password}
           onChangeText={setPassword}
           autoCapitalize="none"
+          // rules={{
+          //   required: 'Requis',
+          //       pattern: {
+          //         value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,30}$/,
+          //         message: 'You need at least one uppercase letter, one lowercase letter and one number',
+          //       },
+          //       maxLength: {
+          //         value: 30,
+          //         message: 'Password too long',
+          //       },
+          //       minLength: {
+          //         value: 6,
+          //         message: 'Password too short',
+          //       },
+          // }}
         />
         <Link style={styles.caption} to={{ screen: "condition" }}>
           By signing up, you agree to all the
@@ -190,11 +227,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow:'hidden'
   },
-  header: {
-    width: width,
-    height: height * 0.1,
-    paddingHorizontal: Size.large,
-  },
   form: {
     width: width,
     alignItems: "center",
@@ -207,6 +239,11 @@ const styles = StyleSheet.create({
     fontSize: Size.fs20,
     color: Colors.white,
     fontWeight: Size.bold,
+  },
+  header: {
+    width: width,
+    height: height * 0.1,
+    paddingHorizontal: Size.large,
   },
   subtitle: {
     fontSize: Size.fs14,
@@ -247,3 +284,5 @@ const styles = StyleSheet.create({
     marginBottom: Size.default,
   },
 });
+
+

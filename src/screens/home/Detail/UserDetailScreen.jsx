@@ -211,6 +211,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   };
 
   const headerShowInfos = () => {
+    console.log(user?.imageUrl, 'kkkkkkkk');
     return (
       <View style={styles.headerShow}>
         <BlurView intensity={70} tint="white" style={styles.headerShowInfos}>
@@ -218,7 +219,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             <Image
               style={styles.avatar}
               source={{
-                uri: user.imageUrl,
+                uri: user?.imageUrl,
               }}
             />
           </View>
