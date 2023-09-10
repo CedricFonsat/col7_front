@@ -28,7 +28,7 @@ export default function LoginScreen({navigation}) {
   });
 
   useEffect(() => {
-    if (response1?.type === "succfess") {
+    if (response1?.type === "success") {
       const { authentication } = response1;
       const idToken = authentication.idToken;
       const decodedToken = jwtDecode(idToken);
