@@ -22,54 +22,54 @@ export default function LoginScreen({navigation}) {
 
      // androidClientId: ''
 
-  const [request1 ,response1, promptAsync1] = Google.useAuthRequest({
-    expoClientId: "nle_ZycxWdDrYXjVa-q1FNdtA3jzAAIwbXCtpzPa",
-    iosClientId: "34155408716-b8vb7q6l9teo0t1opq7l6v67fakoe7q9.apps.googleusercontent.com" 
-  });
+  // const [request1 ,response1, promptAsync1] = Google.useAuthRequest({
+  //   expoClientId: "nle_ZycxWdDrYXjVa-q1FNdtA3jzAAIwbXCtpzPa",
+  //   iosClientId: "34155408716-b8vb7q6l9teo0t1opq7l6v67fakoe7q9.apps.googleusercontent.com" 
+  // });
 
-  useEffect(() => {
-    if (response1?.type === "success") {
-      const { authentication } = response1;
-      const idToken = authentication.idToken;
-      const decodedToken = jwtDecode(idToken);
+  // useEffect(() => {
+  //   if (response1?.type === "success") {
+  //     const { authentication } = response1;
+  //     const idToken = authentication.idToken;
+  //     const decodedToken = jwtDecode(idToken);
 
-      const data = {
-         nickname: decodedToken.name,
-         email: decodedToken.email,
-         googleId: decodedToken.sub,
-         googlePicture: decodedToken.picture,   
-       };
+  //     const data = {
+  //        nickname: decodedToken.name,
+  //        email: decodedToken.email,
+  //        googleId: decodedToken.sub,
+  //        googlePicture: decodedToken.picture,   
+  //      };
 
-       console.log(data);
+  //      console.log(data);
 
-       handleAuthGoogle(data);
-     }else{
-      showMessage({
-        message: "Error",
-        description: "An error occurred during your Google authentication.",
-        type: "danger"
-      });
-     }
+  //      handleAuthGoogle(data);
+  //    }else{
+  //     showMessage({
+  //       message: "Error",
+  //       description: "An error occurred during your Google authentication.",
+  //       type: "danger"
+  //     });
+  //    }
    
 
-  }, [response1]);
+  // }, [response1]);
 
-  const handleAuthGoogle = async(data) => {
-    await authenticationGoogle(data)
-    .unwrap()
-    .then((res) => {
-      AsyncStorage.setItem("@token", res.token);  
-      navigation.navigate("SplashScreen");
-    })
-    .catch(() => {
-        showMessage({
-          message: "Error",
-          description: "An error occurred during your Google authentication.",
-          type: "danger"
-        });
-        navigation.navigate("LoginScreen");
-    });
-  }
+  // const handleAuthGoogle = async(data) => {
+  //   await authenticationGoogle(data)
+  //   .unwrap()
+  //   .then((res) => {
+  //     AsyncStorage.setItem("@token", res.token);  
+  //     navigation.navigate("SplashScreen");
+  //   })
+  //   .catch(() => {
+  //       showMessage({
+  //         message: "Error",
+  //         description: "An error occurred during your Google authentication.",
+  //         type: "danger"
+  //       });
+  //       navigation.navigate("LoginScreen");
+  //   });
+  // }
 
 
 
@@ -138,7 +138,7 @@ export default function LoginScreen({navigation}) {
         backgroundColor={Colors.gray}
         borderWith={1}
         borderColor={Colors.borderColor}
-        onPress={() =>  promptAsync1()}
+       // onPress={() =>  promptAsync1()}
       />
       
 
